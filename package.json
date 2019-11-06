@@ -1,6 +1,9 @@
 {
   "name": "nodejs",
-  "version": "1.0.0",
+  "version": "1.0.0", 
+  "engines": { 
+      "node": "12.13.0" 
+   }
   "description": "Graphs for Ezfin finance application",
   "main": "server.js",
   "scripts": {
