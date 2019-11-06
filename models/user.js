@@ -69,7 +69,12 @@ password: {
 //functions
 
 User.prototype.validPassword = function(password) {
-  return bcrypt.compareSync(password, this.password);
+  //console.log(password);
+  //console.log(this.password);
+   //https://stackoverflow.com/questions/26643587/comparing-bcrypt-hash-between-php-and-nodejs/26643637
+  var hash = this.password.replace('$2y$','$2a$');
+  //console.log(hash);
+  return bcrypt.compareSync(password, hash);
 };
 // create all the defined tables in the specified database.
 sequelize.sync()
