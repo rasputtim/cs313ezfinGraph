@@ -96,7 +96,7 @@ app.route('/login')
             if (!user) {
                 res.redirect('/login');
             } else if (!user.validPassword(password)) {
-                res.redirect('/dashboard');
+                res.redirect('/home');
             } else {
                 req.session.user = user.dataValues;
                 res.redirect('/dashboard');
@@ -114,6 +114,11 @@ app.get('/dashboard', (req, res) => {
     }
 });
 
+app.get('/home', (req, res) => {
+    
+        res.sendFile(__dirname + '/public/home.html');
+    
+});
 
 // route for user logout
 app.get('/logout', (req, res) => {

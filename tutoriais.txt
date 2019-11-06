@@ -1,3 +1,6 @@
 https://scotch.io/tutorials/use-ejs-to-template-your-node-application
 https://www.codementor.io/mayowa.a/how-to-build-a-simple-session-based-authentication-system-with-nodejs-from-scratch-6vn67mcy3
 https://codeforgeek.com/manage-session-using-node-js-express-4/
+
+important:
+https://blog.heroku.com/node-habits-2016#9-only-git-the-important-bits
