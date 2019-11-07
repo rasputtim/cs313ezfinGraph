@@ -55,6 +55,7 @@ app.use((req, res, next) => {
 
 // middleware function to check for logged-in users
 var sessionChecker = (req, res, next) => {
+    
     if (req.session.user && req.cookies.user_sid) {
         res.redirect('/dashboard');
     } else {
@@ -131,7 +132,8 @@ app.get('/dashboard', (req, res) => {
 
 app.get('/home', (req, res) => {
     if (req.session.user && req.cookies.user_sid) {
-        res.sendFile(__dirname + '/public/home.html');
+        
+        res.render('home',{user:  req.session.user, loggedin: "on" } );
     } else {
         res.redirect('/login');
     }
