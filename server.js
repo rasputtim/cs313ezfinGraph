@@ -12,8 +12,15 @@ var PORT = process.env.PORT || 8000;
 // invoke an instance of express application.
 var app = express();
 
+
 // set our application port
 app.set('port', PORT);
+
+//the public_html folder
+app.use(express.static("public"));
+// set the view engine to ejs
+app.set('views', 'views'); //folder to look for the ejs templetes
+app.set('view engine', 'ejs');
 
 // set morgan to log info about our requests for development use.
 app.use(morgan('dev'));
@@ -65,7 +72,7 @@ app.get('/', sessionChecker, (req, res) => {
 // route for user signup
 app.route('/signup')
     .get(sessionChecker, (req, res) => {
-        res.sendFile(__dirname + '/public/signup.html');
+        res.render('signup');
     })
     .post((req, res) => {
         User.create({
@@ -86,7 +93,15 @@ app.route('/signup')
 // route for user Login
 app.route('/login')
     .get(sessionChecker, (req, res) => {
-        res.sendFile(__dirname + '/public/login.html');
+        //controller
+        var name = "Salvatore";
+        var emailaddress = "meuemail@teste.com";
+
+        //var params = {username: name , email: emailaddress, graph: graphHTML};
+        //view
+        //res.render('login',params);
+        res.render('login');
+        
     })
     .post((req, res) => {
         var username = req.body.username,
@@ -108,7 +123,7 @@ app.route('/login')
 // route for user's dashboard
 app.get('/dashboard', (req, res) => {
     if (req.session.user && req.cookies.user_sid) {
-        res.sendFile(__dirname + '/public/dashboard.html');
+        res.render('dashboard');
     } else {
         res.redirect('/login');
     }
