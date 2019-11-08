@@ -115,7 +115,7 @@ app.route('/login')
                 res.redirect('/login');
             } else {
                 req.session.user = user.dataValues;
-                res.redirect('/dashboard');
+                res.redirect('/home');
             }
         });
     });
@@ -130,14 +130,25 @@ app.get('/dashboard', (req, res) => {
     }
 });
 
-app.get('/home', (req, res) => {
+app.get('/inctrans', (req, res) => {
     if (req.session.user && req.cookies.user_sid) {
         
-        res.render('home',{user:  req.session.user, loggedin: "on" } );
+        res.render('inctrans',{user:  req.session.user, loggedin:true , index1_active:false, index2_active:false, index3_active:false ,index4_active:false,index4_active:false} );
     } else {
         res.redirect('/login');
     }
 });
+
+app.get('/home', (req, res) => {
+    if (req.session.user && req.cookies.user_sid) {
+        
+        res.render('home',{user:  req.session.user, loggedin:true , index1_active:false, index2_active:false, index3_active:false ,index4_active:false,index4_active:false} );
+    } else {
+        res.redirect('/login');
+    }
+});
+
+
 
 // route for user logout
 app.get('/logout', (req, res) => {

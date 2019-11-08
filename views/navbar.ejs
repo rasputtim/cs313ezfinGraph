@@ -1,10 +1,11 @@
 
-
-<%
-
-
-	include navbarlogged.ejs ;
-
+<% if (loggedin) { %>
+	<% 	include navbarlogged.ejs ; %>
+  <% }else { %>
+	<% 	include navbarnotlogged.ejs ; %>
+	<% }
 %>
+
+
 
 
