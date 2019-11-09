@@ -3,11 +3,24 @@ var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
 var morgan = require('morgan');
-var User = require('./models/user');
-//const db = require('./models/user');
- 
-//const User = db.tusuarios;
+///////  DATABASE SETUP ////////
 
+//var User = require('./models/user');
+//////////////////   Database init
+const db = require('./config/db.config.js');
+
+const Category = db.category;
+const User = db.tusuario;
+const Transaction = db.transactions;
+const Balview = db.balview;
+// force: true will drop the table if it already exists
+db.sequelize.sync({force: false}).then(() => {
+    console.log('Drop and Resync with { force: false }');
+    console.log('users table has been successfully created, if one doesn\'t exist');
+  }).catch(error => console.log('This error occured', error));
+
+
+///////////////////////////////
 var PORT = process.env.PORT || 8000;
 // invoke an instance of express application.
 var app = express();
@@ -27,6 +40,7 @@ app.use(morgan('dev'));
 
 // initialize body-parser to parse incoming parameters requests to req.body
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 // initialize cookie-parser to allow us access the cookies stored in the browser. 
 app.use(cookieParser());
@@ -63,7 +77,8 @@ var sessionChecker = (req, res, next) => {
     }    
 };
 
-
+//var index = require('./routes/index');
+//app.use('/', index);
 // route for Home-Page
 app.get('/', sessionChecker, (req, res) => {
     res.redirect('/login');
@@ -110,8 +125,10 @@ app.route('/login')
 
         User.findOne({ where: { id_usuario: username } }).then(function (user) {
             if (!user) {
+                console.log("DID NOT FIND ANY USER");
                 res.redirect('/login');
             } else if (!user.validPassword(password)) {
+                console.log("NOT A VALID PASSWORD");
                 res.redirect('/login');
             } else {
                 req.session.user = user.dataValues;
@@ -167,5 +184,35 @@ app.use(function (req, res, next) {
 });
 
 
+ 
+require('./routes/customer.route.js')(app);  ///for findall
+  
+
+
+
+
 // start the express server
 app.listen(app.get('port'), () => console.log(`App started on port ${app.get('port')}`));
+
+/*
+
+function initial() {
+	Customer.create({
+	   firstname: "Jack",
+	   lastname: "Davis",
+	   age: 25
+        });
+ 
+	Customer.create({
+	   firstname: "Mary",
+	   lastname: "Taylor",
+	   age: 37
+        });
+
+	Customer.create({
+	   firstname: "Peter",
+	   lastname: "Smith",
+	   age: 32
+        });
+}
+*/
