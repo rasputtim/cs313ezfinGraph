@@ -1,0 +1,20 @@
+
+<h2>Periods List</h2>
+
+
+<!--
+		<p>Periods 
+		<% for (var i =1; i <=periods.length;  i++ ) { %>
+			<br/>  <%= i %> 
+			<%-  JSON.stringify(periods[i]) %>
+			<% } %>
+		</p>
+		<p>--------------------------</p>
+		<%= JSON.stringify(periods) %>
+		<%= periods[2].name %>
+		-->
+		<ul class="ul1">
+                <% periods.forEach(function(o) { %>
+                    <li><a href="incperiods.php?update=<%= o.idbalview %>"> <%= o.description %></a></li>
+                <% }); %>
+        </ul>

@@ -34,7 +34,7 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.STRING,
       allowNull: false
     },
-    fibalbalance: {
+    finalbalance: {
       type: Sequelize.DECIMAL,
       allowNull: true
     },

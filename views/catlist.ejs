@@ -1,0 +1,20 @@
+
+<h2>category List</h2>
+
+
+<!--
+		<p>CATEGORIES 
+		<% for (var i =1; i <=cats.length;  i++ ) { %>
+			<br/>  <%= i %> 
+			<%-  JSON.stringify(cats[i]) %>
+			<% } %>
+		</p>
+		<p>--------------------------</p>
+		<%= JSON.stringify(cats) %>
+		<%= cats[2].name %>
+		-->
+		<ul class="ul1">
+                <% cats.forEach(function(o) { %>
+                    <li><a href="inccats.php?update=<%= o.idcat %>"> <%= o.alias %></a></li>
+                <% }); %>
+        </ul>
