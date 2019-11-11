@@ -1,8 +1,12 @@
 <html>
-        <% include header.ejs %>
+    <head>
+        <title>Login Here</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+        <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+    </head>
     <body class="container">
         <div class="page-header">
-            <h1>Simple Weight-System</h1>
+            <h1>Simple Auth-System</h1>
         </div>
 
         <nav class="navbar navbar-default">
@@ -25,26 +29,30 @@
 
         <div class="container row">
             <div class="jumbotron col-sm-4 pull-center">
-                <form action="/ponder09" method="post">
+                <form action="#" method="post">
                     <div>
-                        <label>Weight:</label>
-                        <input type="text" name="weight"/>
+                        <label>Get Data:</label>
+                        <input id="search" class="search" type="button" name="search"/>
                     </div>
                     <div>
-                        <label for="thetype">Type</label>
-                            <select id="thetype" name="thetype">
-                            <option value="" selected>Please choose</option>
-                            <option value="1">Letters (Stamped)</option>
-                            <option value="2">Letters (Metered)</option>
-                            <option value="3">Large Envelopes (Flats)</option>
-                            <option value="4">First-Class Package Service—Retail</option>
-                            </select>
+                        
                     </div>
                     <div>
-                        <input class="btn btn-primary" type="submit" value="Get Price"/>
+                        <div class="results" id=results></div>
                     </div>
                 </form>                  
             </div>          
         </div>
+
+        <script>
+        
+                $( "#search" ).click(function() {
+                    var parameters = { search: $(this).val() };
+                    $.get( '/searching',parameters, function(result) {
+                    $('#results').html(result);
+                    });
+                    });
+                </script>
     </body>
+    
 </html>
