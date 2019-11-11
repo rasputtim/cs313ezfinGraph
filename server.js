@@ -34,6 +34,7 @@ app.set('port', PORT);
 app.use(express.static("public"));
 // set the view engine to ejs
 app.set('views', 'views'); //folder to look for the ejs templetes
+//app.set('views','ponder09/views');
 app.set('view engine', 'ejs');
 
 // set morgan to log info about our requests for development use.
@@ -84,6 +85,7 @@ var sessionChecker = (req, res, next) => {
 app.get('/', sessionChecker, (req, res) => {
     res.redirect('/login');
 });
+
 
 
 // route for user signup
@@ -138,7 +140,12 @@ app.route('/login')
         });
     });
 
+///////////////////PONDER09////////////////////////////
 
+// route for user Login
+require('./ponder09/routes')(app);
+
+/////////////  END PONDER 09 ////////////////////
 // route for user's dashboard
 app.get('/dashboard', (req, res) => {
     if (req.session.user && req.cookies.user_sid) {
@@ -263,6 +270,7 @@ app.use(function (req, res, next) {
  
 require('./routes/customer.route.js')(app);  ///for findall
   
+
 
 
 
