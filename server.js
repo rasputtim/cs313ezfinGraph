@@ -34,7 +34,6 @@ app.set('port', PORT);
 app.use(express.static("public"));
 // set the view engine to ejs
 app.set('views', 'views'); //folder to look for the ejs templetes
-//app.set('views','ponder09/views');
 app.set('view engine', 'ejs');
 
 // set morgan to log info about our requests for development use.
@@ -140,12 +139,7 @@ app.route('/login')
         });
     });
 
-///////////////////PONDER09////////////////////////////
 
-// route for user Login
-require('./ponder09/routes')(app);
-
-/////////////  END PONDER 09 ////////////////////
 // route for user's dashboard
 app.get('/dashboard', (req, res) => {
     if (req.session.user && req.cookies.user_sid) {
@@ -237,6 +231,46 @@ app.get('/inctrans', (req, res) => {
         res.redirect('/login');
     }
 });
+app.get('/form', (req, res) => {
+    //if (req.session.user && req.cookies.user_sid) {
+        res.render('form');
+    //} else {
+    //    res.redirect('/login');
+    //}
+});
+///////////////////SEARCHING AJAX TESTING////////////////////////////
+// second route
+app.get('/searching', function(req, res){
+
+	
+    /* THIS IS WORKING AJAX WITH PARALLEL 
+    async.parallel( stackfunctions, function(err,result){
+        var cats = result.categories;
+        var views = result.balviews;
+        //console.log("PARALLEL RESULTS FOR CATEGORIES: " + JSON.stringify(cats));
+        //console.log("\n==============================================\n");
+        //console.log("PARALLEL RESULTS FOR VIEWS: " + JSON.stringify(views));
+        craig = JSON.stringify(views);
+        console.log(craig);
+        res.send(craig);
+    });
+    */
+    Balview.findAll().then(function(balviewResult){
+        //console.log("Periods result: " + JSON.stringify(balviewResult));
+     //   var err = null;
+        //results = req.body.query.results.RDF.item[0]['about'];
+        craig = JSON.stringify(balviewResult);
+        //console.log(craig);
+        res.send(craig);
+    });
+	
+
+});
+
+// route for user Login
+//require('./ponder09/routes')(app);
+
+/////////////  END PONDER 09 ////////////////////
 
 
 app.get('/home', (req, res) => {
