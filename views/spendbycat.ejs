@@ -17,25 +17,20 @@
 	<div class="row">
 			
 	<div class="col-lg-9">
-			<form action="/login" method="post">
-				<div>
-					<label>Username:</label>
-					<input type="text" name="username"/>
-				</div>
-				<div>
-					<label>Password:</label>
-					<input type="password" name="password"/>
-				</div>
-				<div>
-					<input class="btn btn-primary" type="submit" value="Log In"/>
-				</div>
-			</form>    
+			<% include viewslist.ejs %>
+	 <!---// creates a container for the transaction form  -->
+	<% include content.ejs %>
+	
+   <!--- //ends the transaction form container -->
+
+
+ 
 
 	</div>   <!--//end the navigation bar -->
 
 	 <div class="col-lg-3">
 
-			
+			<% include catlist.ejs %>
 	
 		
 		</div>	

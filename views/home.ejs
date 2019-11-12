@@ -1,11 +1,108 @@
 <% include header.ejs %>
-<body>
-<% include menubar.ejs %>
-<h1>This is the Home Page</h1>
+	<body class="subpage">
+	<div id="main">
 
-<h1>Welcome <%= user.real_name %> </h1>
+	<div class="top1">
+		<% include menubar.ejs %>
+	</div>
+
+	
+
+
+	<% include guiabar.ejs %>
+	
+
+	<div id="content">
+	<div class="container">
+	<div class="row">
+			
+	<div class="col-lg-9">
+			
+	 <!---// creates a container for the transaction form  -->
+	 <h1>Welcome <%= user.real_name %> </h1>
 
 <img src="graphs/1.png" alt="first graph">
 <img src="graphs/2.png" alt="second graph">
+	<% include content.ejs %>
+	
+   <!--- //ends the transaction form container -->
+
+
+ 
+
+	</div>   <!--//end the navigation bar -->
+
+	 <div class="col-lg-3">
+<!--- //ends the transaction form container 
+			< include catlist.ejs >
+	
+		-->
+		</div>	
+		</div>	
+		</div>	
+		</div>
+
+
+
+ 
+
+<div class="bot1">
+<div class="container">
+<div class="row">
+<div class="col-lg-12">
+<div class="bot1_inner">
+	<% include footer.ejs %>
+
+</div>	
+</div>	
+</div>
+
+
+
+
+
+
+
+
+	
+</div>
+
+<script src="js/mydatepick.js"></script>
+
+<script>
+
+	$(document).ready(function() {	
+		//	
+		
+		
+	
+	}); //
+	$(window).load(function() {
+		//
+	//Get a reference to the link on the page
+		// with an id of "mylink"
+		var a = document.getElementById("mylink");
+
+		//Set code to run when the link is clicked
+		// by assigning a function to "onclick"
+		a.onclick = function() {
+
+		// Your code here...
+
+		//If you don't want the link to actually 
+		// redirect the browser to another page,
+		// "google.com" in our example here, then
+		// return false at the end of this block.
+		// Note that this also prevents event bubbling,
+		// which is probably what we want here, but won't 
+		// always be the case.
+		message = 'Are you sure?';
+        return confirm(message);
+		}
+	}); //
+
+	
+	</script>	
 </body>
 </html>
+
