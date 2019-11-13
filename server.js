@@ -362,8 +362,20 @@ app.get('/searching', function(req, res){
 
 app.get('/home', (req, res) => {
     if (req.session.user && req.cookies.user_sid) {
-        
-        res.render('home',{user:  req.session.user, loggedin:true , index1_active:false, index2_active:false, index3_active:false ,index4_active:false,index4_active:false} );
+        Category.findAll().then(function(categoryResult){
+            //console.log("categories result: " + JSON.stringify(categoryResult));
+            craig = JSON.stringify(categoryResult);
+            res.render('home',{ catsmost: craig , user:  req.session.user, loggedin:true , index1_active:false, index2_active:false, index3_active:false ,index4_active:false,index4_active:false} );
+        });
+        /*
+        $sql = 'SELECT       idcategory,
+        COUNT(idcategory) AS value_occurrence 
+   FROM     public.ezfin_transactions
+   GROUP BY idcategory
+   ORDER BY value_occurrence DESC
+   LIMIT    8';
+*/
+       
     } else {
         res.redirect('/login');
     }

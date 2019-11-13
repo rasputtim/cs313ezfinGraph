@@ -17,23 +17,18 @@
 	<div class="row">
 			
 	<div class="col-lg-9">
-			
-	 <!---// creates a container for the transaction form  -->
-	 <h1>Welcome <%= user.real_name %> </h1>
+	 <!---// creates a container for the transaction form 
+	 
 
-<img src="graphs/1.png" alt="first graph">
-<img src="graphs/2.png" alt="second graph">
+
 	<% include content.ejs %>
 	
    <!--- //ends the transaction form container -->
 
-
- 
-
 	</div>   <!--//end the navigation bar -->
 
 	 <div class="col-lg-3">
-<!--- //ends the transaction form container 
+      <!--- //ends the transaction form container 
 			< include catlist.ejs >
 	
 		-->
@@ -41,10 +36,33 @@
 		</div>	
 		</div>	
 		</div>
+<!--   START SLIDER CONTAINER-->
+		<div id="slider4_wrapper">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-12">
+						<div id="slider4">
+							<div class="slider4-title">CATEGORIES MOST USED</div>
+								<div class="slider4_wrapper2">
+									<a class="prev4" href="#"></a>
+									<a class="next4" href="#"></a>
+									<div class="carousel-box row">
+										<div class="inner col-lg-12">			
+											<div class="carousel main">
+												   	<% include catmostused.ejs %> 
+												
+											</div>
+										</div>
+									</div>	
+								</div>
+							</div>	
+						</div>	
+					</div>	
+				</div>	
+			</div>
+			
 
-
-
- 
+ <!--   END SLIDER CONTAINER-->
 
 <div class="bot1">
 <div class="container">
@@ -72,11 +90,46 @@
 <script>
 
 	$(document).ready(function() {	
-		//	
-		
-		
+		//	carouFredSel
+		$('#slider4 .carousel.main ul').carouFredSel({
+			auto: {
+				timeoutDuration: 8000					
+			},
+			responsive: true,
+			prev: '.prev4',
+			next: '.next4',
+			width: '100%',
+			scroll: {
+				items: 1,
+				duration: 1000,
+				easing: "easeOutExpo"
+			},			
+			items: {
+				width: '350',
+				height: 'variable',	//	optionally resize item-height			  
+				visible: {
+					min: 1,
+					max: 4
+				}
+			},
+			mousewheel: false,
+			swipe: {
+				onMouse: true,
+				onTouch: true
+				}
+		});
+		$(window).bind("resize",updateSizes_vat).bind("load",updateSizes_vat);
+		function updateSizes_vat(){		
+			$('#slider4 .carousel.main ul').trigger("updateSizes");
+		}
+		updateSizes_vat();
+	
+	
+	
+	
 	
 	}); //
+
 	$(window).load(function() {
 		//
 	//Get a reference to the link on the page

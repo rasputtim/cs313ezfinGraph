@@ -1,0 +1,40 @@
+
+
+<ul>
+<!--
+    foreach ($rows as $row){
+    $stmt2 = $mydb->prepare('SELECT * FROM public.ezfin_category WHERE idcat = :id');
+    $stmt2->bindValue(':id', $row['idcategory'], PDO::PARAM_INT);
+    $stmt2->execute();
+    $cats = $stmt2->fetch(); -->
+
+    <% var data = JSON.parse(catsmost);
+      data.forEach(function(item){ %>
+        <% var icontrim = item.icon.trim(); %>
+    <li>
+            <div class="thumb-carousel2 banner1">
+                <div class="thumbnail clearfix">
+                   <a href="#">
+                        <figure>
+                            <img src="/images/<%=  icontrim %>" alt="">
+                        </figure>
+                        <div class="caption">
+                        <div class="txt1"><%= item.alias%></div>
+                        <div class="txt2"><%= item.description%></div>								
+                        </div>								
+                        </a>								
+                </div>
+            </div>
+        </li>
+
+
+
+  <% }); %>
+										
+}
+																																	
+</ul>
+
+
+
+
