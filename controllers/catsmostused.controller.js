@@ -1,8 +1,8 @@
 const db = require('../config/db.config.js');
-const Transaction = db.transaction;
 
 
-const getMostUsedCats = async (req, res) => {
+
+const getMostUsedCats = (req, res, params) => {
   // get the beginning of the current month
   let cats;
 
@@ -16,20 +16,24 @@ const getMostUsedCats = async (req, res) => {
      LIMIT    8 ) as t, public.ezfin_category  \
      WHERE t.idcat = public.ezfin_category.idcat';
   // Use raw SQL queries to select all cars which belongs to the user
-  cats = await db.sequelize.query(sql, {
+  cats = db.sequelize.query(sql, {
     type: db.sequelize.QueryTypes.SELECT
   }).then(
     function(categoryResult){
         //console.log("categories result: " + JSON.stringify(categoryResult));
         craig = JSON.stringify(categoryResult);
         //console.log("categories result: " + JSON.stringify(categoryResult));
-        return craig;
-    });;
+        craig = JSON.stringify(categoryResult);
+        params.catsmost= craig ;
+        
+        console.log("categories result: " + JSON.stringify(categoryResult));
+        res.render('home',params);
+    });
 
   
   
 };
 
-export default {
+module.exports = {
   getMostUsedCats
 }

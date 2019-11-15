@@ -180,12 +180,12 @@ var stackfunctions = {
 
 
 
-const catlist = require('./controller/category.controller.js');
-// All this objects are exported n the ./controller/index.js file
-const catlistController = require('./controller').category_controller;
-const userController = require('./controller').user_controller;
-const transactionController = require('./controller').transaction_controller;
-const balviewController = require('./controller').balview_controller;
+const catlist = require('./controllers/category.controller.js');
+// All this objects are exported n the ./controllers/index.js file
+const catlistController = require('./controllers').category_controller;
+const userController = require('./controllers').user_controller;
+const transactionController = require('./controllers').transaction_controller;
+const balviewController = require('./controllers').balview_controller;
 
 
 app.get('/inctrans', (req, res) => {
@@ -355,65 +355,10 @@ app.get('/searching', function(req, res){
 });
 
 // route for user Login
-//require('./ponder09/routes')(app);
+//require('./routes/home.js')(app);
 
-/////////////  END PONDER 09 ////////////////////
-
-
-app.get('/home', (req, res) => {
-    if (req.session.user && req.cookies.user_sid) {
-        
-        let cats;
-
-  var sql = 'SELECT t.*,public.ezfin_category.*  FROM ( \
-    SELECT \
-    public.ezfin_transactions.idcategory as idcat, \
-    COUNT(public.ezfin_transactions.idcategory) AS value_occurrence \
-     FROM  public.ezfin_transactions \
-     GROUP BY public.ezfin_transactions.idcategory \
-     ORDER BY value_occurrence DESC \
-     LIMIT    8 ) as t, public.ezfin_category  \
-     WHERE t.idcat = public.ezfin_category.idcat';
-  // Use raw SQL queries to select all cars which belongs to the user
-  cats =  db.sequelize.query(sql, {
-    type: db.sequelize.QueryTypes.SELECT
-  }).then(
-    function(categoryResult){
-        //console.log("categories result: " + JSON.stringify(categoryResult));
-        craig = JSON.stringify(categoryResult);
-        //console.log("categories result: " + JSON.stringify(categoryResult));
-        res.render('home',{ catsmost: craig , user:  req.session.user, loggedin:true , index1_active:false, index2_active:false, index3_active:false ,index4_active:false,index4_active:false} );
-    });
-
-  
-  
-       
-  //res.render('home',{ catsmost: craig , user:  req.session.user, loggedin:true , index1_active:false, index2_active:false, index3_active:false ,index4_active:false,index4_active:false} );     
-      /*   
-        Category.findAll().then(function(categoryResult){
-            //console.log("categories result: " + JSON.stringify(categoryResult));
-            craig = JSON.stringify(categoryResult);
-            res.render('home',{ catsmost: craig , user:  req.session.user, loggedin:true , index1_active:false, index2_active:false, index3_active:false ,index4_active:false,index4_active:false} );
-        });
-
-
-       
-        SELECT t.*,public.ezfin_category.*  FROM (
-	SELECT 
-	public.ezfin_transactions.idcategory as idcat,
-	COUNT(public.ezfin_transactions.idcategory) AS value_occurrence
-   FROM  public.ezfin_transactions
-   GROUP BY public.ezfin_transactions.idcategory
-   ORDER BY value_occurrence DESC
-   LIMIT    8 ) as t, public.ezfin_category 
-   WHERE t.idcat = public.ezfin_category.idcat
-*/
-       
-    } else {
-        res.redirect('/login');
-    }
-});
-
+/////////////  HOME ////////////////////
+require('./routes/home')(app);
 
 
 // route for user logout
