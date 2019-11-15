@@ -78,10 +78,13 @@ var sessionChecker = (req, res, next) => {
     }    
 };
 
+
+const HTML = require("./libs/functions_html");
 //var index = require('./routes/index');
 //app.use('/', index);
 // route for Home-Page
 app.get('/', sessionChecker, (req, res) => {
+    
     res.redirect('/login');
 });
 
@@ -175,7 +178,6 @@ var stackfunctions = {
 
 
 
-
 ////////////////////
 
 
@@ -233,7 +235,32 @@ app.get('/inctrans', (req, res) => {
 
 app.get('/spendbycat', (req, res) => {
     if (req.session.user && req.cookies.user_sid) {
-       
+
+        ///  TEST PRINT SELECT /////////
+    var mylabel = true;
+    var mystyle = '';
+    var fields = {jabuti : 'Jabuticaba', banan: 'Banana'};
+    var selectName = "TheName";
+    var selected = "Banana";
+    var selScript = '';
+    var nothing = 'select';
+    //$nothing Label when nothing is selected.
+    // $nothing_value Value when nothing is selected
+    var nothing_value = '0';
+    var thereturn = true; // return the string for true. console.log for false
+    var multiple = 0;
+    var sort = true;
+
+  
+
+    var selViews = HTML.print_select (fields, selectName, selected, selScript, nothing , nothing_value, 
+        thereturn, multiple, sort, mylabel, false, mystyle);
+    
+    
+        var period = "";
+        
+        var selViews2 = HTML.print_select_from_sql ('SELECT idbalview, title FROM public.ezfin_balanceview', 'driver',
+        period, '', "Period", '', true, 0, false, '');
     // Retrieve all Customer
     var cats;     ///This way is working ///////////////
     async.parallel( stackfunctions, function(err,result){
@@ -242,7 +269,7 @@ app.get('/spendbycat', (req, res) => {
         //console.log("PARALLEL RESULTS FOR CATEGORIES: " + JSON.stringify(cats));
         //console.log("\n==============================================\n");
         //console.log("PARALLEL RESULTS FOR VIEWS: " + JSON.stringify(views));
-        res.render('spendbycat',{periods: views, cats:cats , user:  req.session.user, loggedin:true , index1_active:false, index2_active:false, index3_active:false ,index4_active:false,index4_active:false} );
+        res.render('spendbycat',{select_views: selViews, periods: views, cats:cats , user:  req.session.user, loggedin:true , index1_active:false, index2_active:false, index3_active:false ,index4_active:false,index4_active:false} );
     
     });
     
