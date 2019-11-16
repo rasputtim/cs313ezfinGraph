@@ -5,25 +5,24 @@
         <div class="container">
                 <div>
                         
-                        <input id="search" class="search" type="button" name="search" value="Get Data:">
+                        <input id="search" class="search" type="button" name="search" value="Search" onmouseout="if(this.value=='') this.value='Search'" onmouseover="if(this.value =='Search' ) this.value=''">
                 </div>
                 <div class="row">
-                        <h1>Select &raquo; Period &raquo; </h1>
+                       <!-- <h2>Select &raquo; Period &raquo; </h2> -->
                 </div>
                 <div class="row">
-                        <h2> HERE IS THE SELECT 1</h2>
-                                             
+                                 <br>                                   
                        <%- select_views %>
-                    <!--echo print_select_from_sql ('SELECT idbalview, title FROM public.ezfin_balanceview', 'driver',
-                                    $period, '', "Period", '', true, 0, false, '');-->
+                   
                 </div>
             <div class="row">
-                <h1>Select &raquo; Category &raquo;</h1>
+                <!-- <h2>Select &raquo; Category &raquo;</h2> -->
             </div>
             <div class="row">
-            <!--echo print_select_from_sql ('SELECT idbalview, title FROM public.ezfin_balanceview', 'driver',
-                            $period, '', "Period", '', true, 0, false, '');  -->
-                            <h2> HERE IS THE SELECT 2</h2>
+                    <br>  
+                    <%- select_categories %>
+            
+                            
             </div>';
             
             

@@ -75,6 +75,10 @@ function print_label (label, id, input_type = 'text', thereturn = false, html = 
 
 function print_select (fields, name, selected = '', script = '', nothing = 'select', nothing_value = '0', thereturn = false, multiple = 0, sort = true, label = false, disabled = false, style='') {
 
+  //for(var value in fields) {
+    //console.log("PRINT_SELECT: " + value + " - Value: " + fields[value]);
+  //}
+
 	var output = "\n";
     let disabledText;
 
@@ -113,12 +117,11 @@ function print_select (fields, name, selected = '', script = '', nothing = 'sele
     //console.log("Lenght: " + Object.keys(fields).length);
     //console.log("Type of:" + typeof fields);
 	if (typeof fields !== 'undefined' && Object.keys(fields).length > 0) {
-        if (sort)
+        //if (sort)
             // todo: sort the pair key values
             //fields.sort();
-            
             for(var value in fields) {
-                //console.log( value + " : " + fields[value]);
+              
              
                 var label = fields[value];
                 var optlabel = label;
@@ -161,37 +164,7 @@ const db = require('../config/db.config.js');
 
 
 
-const getMostUsedCats = (req, res, params) => {
-  // get the beginning of the current month
-  let cats;
 
-  var sql = 'SELECT t.*,public.ezfin_category.*  FROM ( \
-    SELECT \
-    public.ezfin_transactions.idcategory as idcat, \
-    COUNT(public.ezfin_transactions.idcategory) AS value_occurrence \
-     FROM  public.ezfin_transactions \
-     GROUP BY public.ezfin_transactions.idcategory \
-     ORDER BY value_occurrence DESC \
-     LIMIT    8 ) as t, public.ezfin_category  \
-     WHERE t.idcat = public.ezfin_category.idcat';
-  // Use raw SQL queries to select all cars which belongs to the user
-  cats = db.sequelize.query(sql, {
-    type: db.sequelize.QueryTypes.SELECT
-  }).then(
-    function(categoryResult){
-        //console.log("categories result: " + JSON.stringify(categoryResult));
-        craig = JSON.stringify(categoryResult);
-        //console.log("categories result: " + JSON.stringify(categoryResult));
-        craig = JSON.stringify(categoryResult);
-        params.catsmost= craig ;
-        
-        console.log("categories result: " + JSON.stringify(categoryResult));
-        res.render('home',params);
-    });
-
-  
-  
-};
 
 /**
  * Prints an array of fields in a popup menu of a form based on a SQL query.
@@ -206,52 +179,51 @@ const getMostUsedCats = (req, res, params) => {
  * $script Javascript onChange code.
  * $nothing Label when nothing is selected.
  * $nothing_value Value when nothing is selected
+
+ return a Promise oject
+ You access the result of a promise by using the .then()
+
  */
-function print_select_from_sql (sql, name, selected = '', script = '', nothing = 'select', nothing_value = '0', thereturn = false, multiple = false, sort = true, label = false, disabled = false) {
+async function print_select_from_sql (sql, name, selected = '', script = '', nothing = 'select', nothing_value = '0', thereturn = false, multiple = false, sort = true, label = false, disabled = false) {
 
 	fields = {};
     
-  db.sequelize.query(sql, {
+  var Result = await db.sequelize.query(sql, {
     type: db.sequelize.QueryTypes.SELECT
-  }).then(
-    function(Result){
-      //Result.forEach(function(item){
-        if (! Result) {
-          console.log( "<H3> ERROR IN QUERY </H3>");
-          return "";
-        }
+  });
+      //console.log("The result is: " + JSON.stringify(Result));
+      if (typeof Result == 'undefined' || Result.length ==0) {
+        console.log( "<H3> ERROR IN QUERY </H3>");
+        return "";
+      }
 
-      //});
-        //console.log("categories result: " + JSON.stringify(Result));
+      //result is an array of objects [{item},{item},{item}]
+      Result.forEach(function(items){
         
-        console.log( "*********************************************");
-        console.log(sql);
-        craig = JSON.stringify(Result);
-        console.log( "*********************************************");
-        //console.log("categories result: " + JSON.stringify(Result));
-        /*foreach ( $result as $row)
-          {
-            
-            $fields[$row[0]] = $row[1];
-          }
-        */
-        
-        console.log("categories result: " + craig);
-        
-    });
+        values = Object.values(items);
+        //console.log( "*********************************************");
+        //  console.log("\n[0]]: " + values[0] );
+        //  console.log("\n[1]]: " + values[1] );
+        //console.log( "*********************************************");
+        fields[values[0]] = values[1];
+        }); //end foreach
 
-    
-        
-	
+      //console.log( "*********************************************");
+      //console.log("FIELDS: " + JSON.stringify(fields));
+      //console.log( "*********************************************");
 
-	
 
-	$output = print_select (fields, name, selected, script, nothing, nothing_value, true, multiple, sort, label, disabled);
 
-	if (thereturn)
-		return output;
+      output = print_select (fields, name, selected, script, nothing, nothing_value, true, multiple, sort, label, disabled);
+      //console.log("SELECT fase 1: " + output);
+      
+   
+  if (thereturn){
+    //console.log("SELECT to return: " + output);
+    return output;
+  }else
+  console.log(output);
 
-	console.log(output);
 }
 
   

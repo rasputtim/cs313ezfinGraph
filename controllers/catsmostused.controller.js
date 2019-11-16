@@ -26,7 +26,7 @@ const getMostUsedCats = (req, res, params) => {
         craig = JSON.stringify(categoryResult);
         params.catsmost= craig ;
         
-        console.log("categories result: " + JSON.stringify(categoryResult));
+        //console.log("categories result: " + JSON.stringify(categoryResult));
         res.render('home',params);
     });
 

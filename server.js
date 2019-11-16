@@ -176,6 +176,46 @@ var stackfunctions = {
 };
 
 
+var stackfunctionsSearch = {
+    categories: function(callback) { 
+                Category.findAll().then(function(categoryResult){
+                    //console.log("categories result: " + JSON.stringify(categoryResult));
+                    var err = null;
+                    callback(err, categoryResult);
+                });
+            }, 
+    balviews: function(callback){
+            Balview.findAll().then(function(balviewResult){
+            //console.log("Periods result: " + JSON.stringify(balviewResult));
+            var err = null;
+            callback(err, balviewResult);
+        });
+    
+    },
+    selectBalview: function(callback){
+        var period = "";
+        HTML.print_select_from_sql ('SELECT idBalView, title FROM public.ezfin_balanceView', 'driver',
+        period, '', "Periods", '', true, 0, false, '').then(function(selViews2){
+            //console.log("Periods result: " + JSON.stringify(balviewResult));
+            var err = null;
+            callback(err, selViews2);
+        });
+        
+    
+    },
+    selectCategory: function(callback){
+        var period = "";
+        HTML.print_select_from_sql ('SELECT idCat, alias FROM public.ezfin_category', 'driver2',
+        period, '', "Category", '', true, 0, false, '').then(function(catViews){
+            //console.log("Periods result: " + JSON.stringify(balviewResult));
+            var err = null;
+            callback(err, catViews);
+        });
+        
+    
+    }
+};
+
 
 
 ////////////////////
@@ -253,23 +293,26 @@ app.get('/spendbycat', (req, res) => {
 
   
 
-    var selViews = HTML.print_select (fields, selectName, selected, selScript, nothing , nothing_value, 
-        thereturn, multiple, sort, mylabel, false, mystyle);
+    //var selViews = HTML.print_select (fields, selectName, selected, selScript, nothing , nothing_value, 
+      //  thereturn, multiple, sort, mylabel, false, mystyle);
     
     
-        var period = "";
+        //var period = "";
         
-        var selViews2 = HTML.print_select_from_sql ('SELECT idbalview, title FROM public.ezfin_balanceview', 'driver',
-        period, '', "Period", '', true, 0, false, '');
+        
+        
     // Retrieve all Customer
     var cats;     ///This way is working ///////////////
-    async.parallel( stackfunctions, function(err,result){
+    async.parallel( stackfunctionsSearch, function(err,result){
         var cats = result.categories;
         var views = result.balviews;
+        var selCats = result.selectCategory;
+        var selViews = result.selectBalview;
         //console.log("PARALLEL RESULTS FOR CATEGORIES: " + JSON.stringify(cats));
         //console.log("\n==============================================\n");
         //console.log("PARALLEL RESULTS FOR VIEWS: " + JSON.stringify(views));
-        res.render('spendbycat',{select_views: selViews, periods: views, cats:cats , user:  req.session.user, loggedin:true , index1_active:false, index2_active:false, index3_active:false ,index4_active:false,index4_active:false} );
+        console.log("SELECT BY SQL: " + selCats);
+        res.render('spendbycat',{select_categories: selCats, select_views: selViews, periods: views, cats:cats , user:  req.session.user, loggedin:true , index1_active:false, index2_active:false, index3_active:false ,index4_active:false,index4_active:false} );
     
     });
     
