@@ -396,6 +396,50 @@ app.get('/form', (req, res) => {
     //}
 });
 ///////////////////SEARCHING AJAX TESTING////////////////////////////
+
+
+app.get('/getgraphdata', function(req, res){
+
+	
+    /* THIS IS WORKING AJAX WITH PARALLEL 
+    async.parallel( stackfunctions, function(err,result){
+        var cats = result.categories;
+        var views = result.balviews;
+        //console.log("PARALLEL RESULTS FOR CATEGORIES: " + JSON.stringify(cats));
+        //console.log("\n==============================================\n");
+        //console.log("PARALLEL RESULTS FOR VIEWS: " + JSON.stringify(views));
+        craig = JSON.stringify(views);
+        console.log(craig);
+        res.send(craig);
+    });
+    */
+    
+data = [{
+			values: [16, 15, 12, 6, 5, 4, 42],
+			labels: ['US', 'China', 'European Union', 'Russian Federation', 'Brazil', 'India', 'Rest of World' ],
+			domain: {column: 0},
+			name: 'GHG Emissions',
+			hoverinfo: 'label+percent+name',
+			hole: .4,
+			type: 'pie'
+			},{
+			values: [27, 11, 25, 8, 1, 3, 25],
+			labels: ['US', 'China', 'European Union', 'Russian Federation', 'Brazil', 'India', 'Rest of World' ],
+			text: 'CO2',
+			textposition: 'inside',
+			domain: {column: 1},
+			name: 'CO2 Emissions',
+			hoverinfo: 'label+percent+name',
+			hole: .4,
+			type: 'pie'
+			}];
+
+        res.send(data);
+   
+	
+
+});
+
 // second route
 app.get('/searching', function(req, res){
 

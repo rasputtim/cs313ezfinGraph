@@ -40,6 +40,9 @@
 						
                 </div>
 	 <!---// creates a container for the transaction form  -->
+	 <div id="myDiv">
+
+	 </div>
 	<% include content.ejs %>
 	<% include viewslist.ejs %>
    <!--- //ends the transaction form container -->
@@ -97,13 +100,51 @@
 					});
 				});
 </script>
+<script>
+$("#mybutton").click(function() {
+	var layout = {
+  title: 'Global Emissions 1990-2011',
+  grid: {rows: 1, columns: 2},
+  showlegend: true,
+  annotations: [
+    {
+      font: {
+        size: 14
+      },
+      showarrow: false,
+      text: 'GHG',
+      x: 0.17,
+      y: 0.5
+    },
+    {
+      font: {
+        size: 14
+      },
+      showarrow: false,
+      text: 'CO2',
+      x: 0.82,
+      y: 0.5
+    }
+  ]
+};
+	var parameters = { search: $(this).val() };
+	$.get( '/getgraphdata',parameters, function(data) {
+		
+		Plotly.newPlot('myDiv', data, layout, {showSendToCloud:true});	
+	});
 
+
+
+
+
+
+
+});
+</script>
 <script>
 
 	$(document).ready(function() {	
-		//	
-		
-		
+//		
 	
 	}); //
 	$(window).load(function() {
