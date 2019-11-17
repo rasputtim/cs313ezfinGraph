@@ -194,7 +194,7 @@ var stackfunctionsSearch = {
     },
     selectBalview: function(callback){
         var period = "";
-        HTML.print_select_from_sql ('SELECT idBalView, title FROM public.ezfin_balanceView', 'driver',
+        HTML.print_select_from_sql ('SELECT idBalView, title FROM public.ezfin_balanceView', 'period_select',
         period, '', "Periods", '', true, 0, false, '').then(function(selViews2){
             //console.log("Periods result: " + JSON.stringify(balviewResult));
             var err = null;
@@ -205,7 +205,7 @@ var stackfunctionsSearch = {
     },
     selectCategory: function(callback){
         var period = "";
-        HTML.print_select_from_sql ('SELECT idCat, alias FROM public.ezfin_category', 'driver2',
+        HTML.print_select_from_sql ('SELECT idCat, alias FROM public.ezfin_category', 'category_select',
         period, '', "Category", '', true, 0, false, '').then(function(catViews){
             //console.log("Periods result: " + JSON.stringify(balviewResult));
             var err = null;
@@ -291,8 +291,7 @@ app.get('/spendbycat', (req, res) => {
     var multiple = 0;
     var sort = true;
 
-  
-
+     
     //var selViews = HTML.print_select (fields, selectName, selected, selScript, nothing , nothing_value, 
       //  thereturn, multiple, sort, mylabel, false, mystyle);
     
@@ -396,11 +395,93 @@ app.get('/form', (req, res) => {
     //}
 });
 ///////////////////SEARCHING AJAX TESTING////////////////////////////
+async function getDates(periodId){
 
+    sql = "select * from ezfin_balanceView WHERE idbalview = :id"
+    var Result = await db.sequelize.query(sql, {
+        replacements: {id: periodId},
+        type: db.sequelize.QueryTypes.SELECT
+      });
+
+      return Result;
+}
 
 app.get('/getgraphdata', function(req, res){
+    var myCat = req.query.category_select;
+    var myVal = req.query.period_select
+    
+    //console.log("SELECT CAT Value: " + myCat);
+    //console.log("SELECT PERIOD Value: " + myVal);
+    
+    var dates = getDates(myVal).then(function (result){
+        var initialDate = result[0].initialdate;
+        var finalDate = result[0].finaldate;
+        var PeriodName = result[0].title;
+    var sql = 'SELECT t.*,public.ezfin_category.*  FROM ( \
+        SELECT sum (amount)as value, idcategory  FROM public.ezfin_transactions \
+        WHERE  duedate between :start_date \
+        and :end_date \
+        group by idcategory \
+            ) as t, public.ezfin_category  \
+             WHERE t.idcategory = public.ezfin_category.idcat';
+   // and idcategory IN(:catlist) \
+ db.sequelize.query(sql,
+ { replacements: { /*catlist: [Number(myCat) , 16] , */start_date: initialDate , end_date: finalDate }, type: db.sequelize.QueryTypes.SELECT }
+   ).then(transactions => {
+       data = [];
+   if (transactions.length > 0){
+       valuesCredit = [];
+       labelsCredit = [];
+       valuesDebit = [];
+       labelsDebit = [];
+    console.log("TRANSACTION: "+ JSON.stringify(transactions));
+   for (var i = 0 ; i < transactions.length  ; i++){
+       if(transactions[i].operation == 0) {
+            valuesCredit.push(transactions[i].value); 
+            labelsCredit.push(transactions[i].alias);
+        }
+        if(transactions[i].operation == 1) {
+            valuesDebit.push(transactions[i].value); 
+            labelsDebit.push(transactions[i].alias);
+        }
+        
+   }
+   
+    data = [{
+        values: valuesCredit,
+        labels: labelsCredit,
+        domain: {column: 0},
+        name: "Credits",
+        hoverinfo: 'label+percent+name',
+        hole: .4,
+        type: 'pie'
+        },{
+        values: valuesDebit,
+        labels: labelsDebit,
+        text: 'Debits',
+        textposition: 'inside',
+        domain: {column: 1},
+        name: 'Debits',
+        hoverinfo: 'label+percent+name',
+        hole: .4,
+        type: 'pie'
+        }];
 
-	
+   }else{
+
+   }
+   res.send(data);
+})
+
+
+
+       
+ 
+
+
+});
+   
+
     /* THIS IS WORKING AJAX WITH PARALLEL 
     async.parallel( stackfunctions, function(err,result){
         var cats = result.categories;
@@ -413,28 +494,8 @@ app.get('/getgraphdata', function(req, res){
         res.send(craig);
     });
     */
-    
-data = [{
-			values: [16, 15, 12, 6, 5, 4, 42],
-			labels: ['US', 'China', 'European Union', 'Russian Federation', 'Brazil', 'India', 'Rest of World' ],
-			domain: {column: 0},
-			name: 'GHG Emissions',
-			hoverinfo: 'label+percent+name',
-			hole: .4,
-			type: 'pie'
-			},{
-			values: [27, 11, 25, 8, 1, 3, 25],
-			labels: ['US', 'China', 'European Union', 'Russian Federation', 'Brazil', 'India', 'Rest of World' ],
-			text: 'CO2',
-			textposition: 'inside',
-			domain: {column: 1},
-			name: 'CO2 Emissions',
-			hoverinfo: 'label+percent+name',
-			hole: .4,
-			type: 'pie'
-			}];
-
-        res.send(data);
+   
+  
    
 	
 
@@ -443,7 +504,7 @@ data = [{
 // second route
 app.get('/searching', function(req, res){
 
-	
+    
     /* THIS IS WORKING AJAX WITH PARALLEL 
     async.parallel( stackfunctions, function(err,result){
         var cats = result.categories;

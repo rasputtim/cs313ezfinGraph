@@ -102,8 +102,9 @@
 </script>
 <script>
 $("#mybutton").click(function() {
+	$("#myDiv").html("");
 	var layout = {
-  title: 'Global Emissions 1990-2011',
+  title: 'Spends by Category',
   grid: {rows: 1, columns: 2},
   showlegend: true,
   annotations: [
@@ -112,7 +113,7 @@ $("#mybutton").click(function() {
         size: 14
       },
       showarrow: false,
-      text: 'GHG',
+      text: 'Cred',
       x: 0.17,
       y: 0.5
     },
@@ -121,15 +122,19 @@ $("#mybutton").click(function() {
         size: 14
       },
       showarrow: false,
-      text: 'CO2',
+      text: 'Deb',
       x: 0.82,
       y: 0.5
     }
   ]
 };
-	var parameters = { search: $(this).val() };
+	var parameters = { category_select: $("#category_select").val(),
+		period_select: $("#period_select").val()
+	};
+//alert('VAL: '+ $("#category_select").val());
 	$.get( '/getgraphdata',parameters, function(data) {
-		
+		//alert (data.length);
+		if (data.length > 0)
 		Plotly.newPlot('myDiv', data, layout, {showSendToCloud:true});	
 	});
 
