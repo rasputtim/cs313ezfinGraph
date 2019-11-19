@@ -103,36 +103,25 @@
 <script>
 $("#mybutton").click(function() {
 	$("#myDiv").html("");
+	
 	var layout = {
-  title: 'Spends by Category',
-  grid: {rows: 1, columns: 2},
+  barmode: 'stack',
+  title: 'Cashflow',
   showlegend: true,
-  annotations: [
-    {
-      font: {
-        size: 14
-      },
-      showarrow: false,
-      text: 'Cred',
-      x: 0.17,
-      y: 0.5
-    },
-    {
-      font: {
-        size: 14
-      },
-      showarrow: false,
-      text: 'Deb',
-      x: 0.82,
-      y: 0.5
-    }
-  ]
+  xaxis: {
+    tickangle: -45
+  },
+  yaxis: {
+    zeroline: true,
+    gridwidth: 2
+  }
+  
 };
 	var parameters = { category_select: $("#category_select").val(),
 		period_select: $("#period_select").val()
 	};
 //alert('VAL: '+ $("#category_select").val());
-	$.get( '/getgraphdata',parameters, function(data) {
+	$.get( '/getgraphcashflow',parameters, function(data) {
 		//alert (data.length);
 		if (data.length > 0)
 		Plotly.newPlot('myDiv', data, layout, {showSendToCloud:true});	
