@@ -310,7 +310,7 @@ app.get('/spendbycat', (req, res) => {
         //console.log("PARALLEL RESULTS FOR CATEGORIES: " + JSON.stringify(cats));
         //console.log("\n==============================================\n");
         //console.log("PARALLEL RESULTS FOR VIEWS: " + JSON.stringify(views));
-        console.log("SELECT BY SQL: " + selCats);
+        //console.log("SELECT BY SQL: " + selCats);
         res.render('spendbycat',{select_categories: selCats, select_views: selViews, periods: views, cats:cats , user:  req.session.user, loggedin:true , index1_active:false, index2_active:false, index3_active:false ,index4_active:false,index4_active:false} );
     
     });
@@ -343,18 +343,46 @@ app.get('/spendbycat', (req, res) => {
 });
 
 
+
 app.get('/cashflow', (req, res) => {
     if (req.session.user && req.cookies.user_sid) {
-       
+
+        ///  TEST PRINT SELECT /////////
+    var mylabel = true;
+    var mystyle = '';
+    var fields = {jabuti : 'Jabuticaba', banan: 'Banana'};
+    var selectName = "TheName";
+    var selected = "Banana";
+    var selScript = '';
+    var nothing = 'select';
+    //$nothing Label when nothing is selected.
+    // $nothing_value Value when nothing is selected
+    var nothing_value = '0';
+    var thereturn = true; // return the string for true. console.log for false
+    var multiple = 0;
+    var sort = true;
+
+     
+    //var selViews = HTML.print_select (fields, selectName, selected, selScript, nothing , nothing_value, 
+      //  thereturn, multiple, sort, mylabel, false, mystyle);
+    
+    
+        //var period = "";
+        
+        
+        
     // Retrieve all Customer
     var cats;     ///This way is working ///////////////
-    async.parallel( stackfunctions, function(err,result){
+    async.parallel( stackfunctionsSearch, function(err,result){
         var cats = result.categories;
         var views = result.balviews;
+        var selCats = result.selectCategory;
+        var selViews = result.selectBalview;
         //console.log("PARALLEL RESULTS FOR CATEGORIES: " + JSON.stringify(cats));
         //console.log("\n==============================================\n");
         //console.log("PARALLEL RESULTS FOR VIEWS: " + JSON.stringify(views));
-        res.render('cashflow',{periods: views, cats:cats , user:  req.session.user, loggedin:true , index1_active:false, index2_active:false, index3_active:false ,index4_active:false,index4_active:false} );
+        //console.log("SELECT BY SQL: " + selCats);
+        res.render('cashflow',{select_categories: selCats, select_views: selViews, periods: views, cats:cats , user:  req.session.user, loggedin:true , index1_active:false, index2_active:false, index3_active:false ,index4_active:false,index4_active:false} );
     
     });
     
@@ -398,6 +426,7 @@ app.get('/form', (req, res) => {
 
 
 require('./routes/getgraphdata.route')(app);
+require('./routes/getgraphcashflow.route')(app);
 
 // second route
 app.get('/searching', function(req, res){
