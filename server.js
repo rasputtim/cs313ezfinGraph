@@ -79,7 +79,7 @@ var sessionChecker = (req, res, next) => {
 };
 
 
-const HTML = require("./libs/functions_html");
+
 //var index = require('./routes/index');
 //app.use('/', index);
 // route for Home-Page
@@ -176,45 +176,6 @@ var stackfunctions = {
 };
 
 
-var stackfunctionsSearch = {
-    categories: function(callback) { 
-                Category.findAll().then(function(categoryResult){
-                    //console.log("categories result: " + JSON.stringify(categoryResult));
-                    var err = null;
-                    callback(err, categoryResult);
-                });
-            }, 
-    balviews: function(callback){
-            Balview.findAll().then(function(balviewResult){
-            //console.log("Periods result: " + JSON.stringify(balviewResult));
-            var err = null;
-            callback(err, balviewResult);
-        });
-    
-    },
-    selectBalview: function(callback){
-        var period = "";
-        HTML.print_select_from_sql ('SELECT idBalView, title FROM public.ezfin_balanceView', 'period_select',
-        period, '', "Periods", '', true, 0, false, '').then(function(selViews2){
-            //console.log("Periods result: " + JSON.stringify(balviewResult));
-            var err = null;
-            callback(err, selViews2);
-        });
-        
-    
-    },
-    selectCategory: function(callback){
-        var period = "";
-        HTML.print_select_from_sql ('SELECT idCat, alias FROM public.ezfin_category', 'category_select',
-        period, '', "Category", '', true, 0, false, '').then(function(catViews){
-            //console.log("Periods result: " + JSON.stringify(balviewResult));
-            var err = null;
-            callback(err, catViews);
-        });
-        
-    
-    }
-};
 
 
 
@@ -230,188 +191,7 @@ const transactionController = require('./controllers').transaction_controller;
 const balviewController = require('./controllers').balview_controller;
 
 
-app.get('/inctrans', (req, res) => {
-    if (req.session.user && req.cookies.user_sid) {
-       
 
-    // Retrieve all Customer
-    var cats;     ///This way is working ///////////////
-    async.parallel( stackfunctions, function(err,result){
-        var cats = result.categories;
-        var views = result.balviews;
-        //console.log("PARALLEL RESULTS FOR CATEGORIES: " + JSON.stringify(cats));
-        //console.log("\n==============================================\n");
-        //console.log("PARALLEL RESULTS FOR VIEWS: " + JSON.stringify(views));
-        res.render('inctrans',{periods: views, cats:cats , user:  req.session.user, loggedin:true , index1_active:false, index2_active:false, index3_active:false ,index4_active:false,index4_active:false} );
-    
-    });
-    
-    ///todo: shall work in the module as well with callback. how?
-    /*Category.findAll().then(function (catgories) {
-        cats = JSON.stringify(catgories);
-        for (let i = 0; i < catgories.length; i++)  {
-            console.log(catgories[i].dataValues.name);
-          }
-        res.render('inctrans',{cats:catgories , user:  req.session.user, loggedin:true , index1_active:false, index2_active:false, index3_active:false ,index4_active:false,index4_active:false} );
-    });
-    */
-    
-    //console.log(req.cats);
-    //////////////  CALLBACK MODE WITH MODULE RETIEVEL////////////
-    //var categories;
-    //catlist.findAll(req,function(data, index) {
-    //    console.log(data);
-    //  });
-    //categories.forEach(function(data, index) {
-     //   console.log(data);
-     // });
-     ////////////////////////////////
-
-        
-    } else {
-        res.redirect('/login');
-    }
-});
-
-app.get('/spendbycat', (req, res) => {
-    if (req.session.user && req.cookies.user_sid) {
-
-        ///  TEST PRINT SELECT /////////
-    var mylabel = true;
-    var mystyle = '';
-    var fields = {jabuti : 'Jabuticaba', banan: 'Banana'};
-    var selectName = "TheName";
-    var selected = "Banana";
-    var selScript = '';
-    var nothing = 'select';
-    //$nothing Label when nothing is selected.
-    // $nothing_value Value when nothing is selected
-    var nothing_value = '0';
-    var thereturn = true; // return the string for true. console.log for false
-    var multiple = 0;
-    var sort = true;
-
-     
-    //var selViews = HTML.print_select (fields, selectName, selected, selScript, nothing , nothing_value, 
-      //  thereturn, multiple, sort, mylabel, false, mystyle);
-    
-    
-        //var period = "";
-        
-        
-        
-    // Retrieve all Customer
-    var cats;     ///This way is working ///////////////
-    async.parallel( stackfunctionsSearch, function(err,result){
-        var cats = result.categories;
-        var views = result.balviews;
-        var selCats = result.selectCategory;
-        var selViews = result.selectBalview;
-        //console.log("PARALLEL RESULTS FOR CATEGORIES: " + JSON.stringify(cats));
-        //console.log("\n==============================================\n");
-        //console.log("PARALLEL RESULTS FOR VIEWS: " + JSON.stringify(views));
-        //console.log("SELECT BY SQL: " + selCats);
-        res.render('spendbycat',{select_categories: selCats, select_views: selViews, periods: views, cats:cats , user:  req.session.user, loggedin:true , index1_active:false, index2_active:false, index3_active:false ,index4_active:false,index4_active:false} );
-    
-    });
-    
-    ///todo: shall work in the module as well with callback. how?
-    /*Category.findAll().then(function (catgories) {
-        cats = JSON.stringify(catgories);
-        for (let i = 0; i < catgories.length; i++)  {
-            console.log(catgories[i].dataValues.name);
-          }
-        res.render('inctrans',{cats:catgories , user:  req.session.user, loggedin:true , index1_active:false, index2_active:false, index3_active:false ,index4_active:false,index4_active:false} );
-    });
-    */
-    
-    //console.log(req.cats);
-    //////////////  CALLBACK MODE WITH MODULE RETIEVEL////////////
-    //var categories;
-    //catlist.findAll(req,function(data, index) {
-    //    console.log(data);
-    //  });
-    //categories.forEach(function(data, index) {
-     //   console.log(data);
-     // });
-     ////////////////////////////////
-
-        
-    } else {
-        res.redirect('/login');
-    }
-});
-
-
-
-app.get('/cashflow', (req, res) => {
-    if (req.session.user && req.cookies.user_sid) {
-
-        ///  TEST PRINT SELECT /////////
-    var mylabel = true;
-    var mystyle = '';
-    var fields = {jabuti : 'Jabuticaba', banan: 'Banana'};
-    var selectName = "TheName";
-    var selected = "Banana";
-    var selScript = '';
-    var nothing = 'select';
-    //$nothing Label when nothing is selected.
-    // $nothing_value Value when nothing is selected
-    var nothing_value = '0';
-    var thereturn = true; // return the string for true. console.log for false
-    var multiple = 0;
-    var sort = true;
-
-     
-    //var selViews = HTML.print_select (fields, selectName, selected, selScript, nothing , nothing_value, 
-      //  thereturn, multiple, sort, mylabel, false, mystyle);
-    
-    
-        //var period = "";
-        
-        
-        
-    // Retrieve all Customer
-    var cats;     ///This way is working ///////////////
-    async.parallel( stackfunctionsSearch, function(err,result){
-        var cats = result.categories;
-        var views = result.balviews;
-        var selCats = result.selectCategory;
-        var selViews = result.selectBalview;
-        //console.log("PARALLEL RESULTS FOR CATEGORIES: " + JSON.stringify(cats));
-        //console.log("\n==============================================\n");
-        //console.log("PARALLEL RESULTS FOR VIEWS: " + JSON.stringify(views));
-        //console.log("SELECT BY SQL: " + selCats);
-        res.render('cashflow',{select_categories: selCats, select_views: selViews, periods: views, cats:cats , user:  req.session.user, loggedin:true , index1_active:false, index2_active:false, index3_active:false ,index4_active:false,index4_active:false} );
-    
-    });
-    
-    ///todo: shall work in the module as well with callback. how?
-    /*Category.findAll().then(function (catgories) {
-        cats = JSON.stringify(catgories);
-        for (let i = 0; i < catgories.length; i++)  {
-            console.log(catgories[i].dataValues.name);
-          }
-        res.render('inctrans',{cats:catgories , user:  req.session.user, loggedin:true , index1_active:false, index2_active:false, index3_active:false ,index4_active:false,index4_active:false} );
-    });
-    */
-    
-    //console.log(req.cats);
-    //////////////  CALLBACK MODE WITH MODULE RETIEVEL////////////
-    //var categories;
-    //catlist.findAll(req,function(data, index) {
-    //    console.log(data);
-    //  });
-    //categories.forEach(function(data, index) {
-     //   console.log(data);
-     // });
-     ////////////////////////////////
-
-        
-    } else {
-        res.redirect('/login');
-    }
-});
 
 
 
@@ -422,9 +202,11 @@ app.get('/form', (req, res) => {
     //    res.redirect('/login');
     //}
 });
-///////////////////SEARCHING AJAX TESTING////////////////////////////
-
-
+///////////////////PAGES THAT CALL AJAX////////////////////////////
+require('./routes/inctrans.route')(app);
+require('./routes/spendbycat.route')(app);
+require('./routes/cashflow.route')(app);
+///////AJAX ////////////////////////////
 require('./routes/getgraphdata.route')(app);
 require('./routes/getgraphcashflow.route')(app);
 
@@ -491,25 +273,3 @@ require('./routes/customer.route.js')(app);  ///for findall
 // start the express server
 app.listen(app.get('port'), () => console.log(`App started on port ${app.get('port')}`));
 
-/*
-
-function initial() {
-	Customer.create({
-	   firstname: "Jack",
-	   lastname: "Davis",
-	   age: 25
-        });
- 
-	Customer.create({
-	   firstname: "Mary",
-	   lastname: "Taylor",
-	   age: 37
-        });
-
-	Customer.create({
-	   firstname: "Peter",
-	   lastname: "Smith",
-	   age: 32
-        });
-}
-*/
