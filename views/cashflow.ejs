@@ -106,6 +106,7 @@ $("#mybutton").click(function() {
 	
 	var layout = {
   barmode: 'stack',
+  
   title: 'Cashflow',
   showlegend: true,
   xaxis: {
@@ -113,7 +114,10 @@ $("#mybutton").click(function() {
   },
   yaxis: {
     zeroline: true,
-    gridwidth: 2
+	gridwidth: 2,
+	range: [-60, 50],
+	exponentformat: 'e',
+    showexponent: 'all'
   }
   
 };
