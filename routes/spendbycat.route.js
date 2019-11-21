@@ -28,8 +28,9 @@ var stackfunctionsSearch = {
     },
     selectBalview: function(callback){
         var period = "";
+        var multiple = false;
         HTML.print_select_from_sql ('SELECT idBalView, title FROM public.ezfin_balanceView', 'period_select',
-        period, '', "Periods", '', true, 0, false, '').then(function(selViews2){
+        period, '', "Periods", '', true, multiple, false, '').then(function(selViews2){
             //console.log("Periods result: " + JSON.stringify(balviewResult));
             var err = null;
             callback(err, selViews2);
@@ -39,8 +40,9 @@ var stackfunctionsSearch = {
     },
     selectCategory: function(callback){
         var period = "";
+        var multiple = true;
         HTML.print_select_from_sql ('SELECT idCat, alias FROM public.ezfin_category', 'category_select',
-        period, '', "Category", '', true, 0, false, '').then(function(catViews){
+        period, '', "Category", '', true, multiple, false, '').then(function(catViews){
             //console.log("Periods result: " + JSON.stringify(balviewResult));
             var err = null;
             callback(err, catViews);

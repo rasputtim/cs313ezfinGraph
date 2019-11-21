@@ -45,7 +45,13 @@ module.exports = (app) => {
     app.get('/getgraphdata', function(req, res){
         var myCat = req.query.category_select;
         var myVal = req.query.period_select
-        
+        var selectCATVal = [];
+        for (i = 0; i < myCat.length; i++) { 
+            
+            if(Number(myCat[i]) !=0){
+                selectCATVal.push(Number(myCat[i]));
+            }
+        }
         //console.log("SELECT CAT Value: " + myCat);
         //console.log("SELECT PERIOD Value: " + myVal);
         //if (!myCat) {
@@ -53,7 +59,7 @@ module.exports = (app) => {
                 var initialDate = result[0].initialdate;
                 var finalDate = result[0].finaldate;
                 var PeriodName = result[0].title;
-        if(!myCat){
+        if(selectCATVal.length ==0){
             stackfunctionsTransactions.transactions = function(callback) { 
                     
                 var sql = 'SELECT t.*,public.ezfin_category.*  FROM ( \
@@ -122,7 +128,7 @@ module.exports = (app) => {
                         WHERE t.idcategory = public.ezfin_category.idcat';
                 
             db.sequelize.query(sql,
-            { replacements: { catlist: [Number(myCat) , 16] , start_date: initialDate , end_date: finalDate }, type: db.sequelize.QueryTypes.SELECT }
+            { replacements: { catlist: selectCATVal , start_date: initialDate , end_date: finalDate }, type: db.sequelize.QueryTypes.SELECT }
             ).then(function(transResult){
                     //console.log("categories result: " + JSON.stringify(categoryResult));
                     var err = null;
@@ -137,7 +143,7 @@ module.exports = (app) => {
                 //console.log("\n==============================================\n");
                 //console.log("PARALLEL RESULTS FOR VIEWS: " + JSON.stringify(views));
                 transactions  = result.transactions;
-                if(myCat) {
+                if(selectCATVal.length > 0) {
                     totalCredit = result.totalCredit;
                     totalDebit = result.totalDebit;
                 }
@@ -161,7 +167,7 @@ module.exports = (app) => {
                     
                 }
 
-                if(myCat){
+                if(selectCATVal.length > 0){
                     var totalLocalCred = 0;
                     var totalLocalDeb = 0;
                     for (var i = 0 ; i < transactions.length  ; i++){

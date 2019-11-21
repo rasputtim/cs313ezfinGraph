@@ -39,8 +39,9 @@ var stackfunctionsSearch = {
     },
     selectCategory: function(callback){
         var period = "";
+        var multiple = true;
         HTML.print_select_from_sql ('SELECT idCat, alias FROM public.ezfin_category', 'category_select',
-        period, '', "Category", '', true, 0, false, '').then(function(catViews){
+        period, '', "Category", '', true, multiple, false, '').then(function(catViews){
             //console.log("Periods result: " + JSON.stringify(balviewResult));
             var err = null;
             callback(err, catViews);

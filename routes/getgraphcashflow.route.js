@@ -86,6 +86,13 @@ module.exports = (app) => {
     app.get('/getgraphcashflow', function(req, res){
         var myCat = req.query.category_select;
         var myVal = req.query.period_select
+        var selectCATVal = [];
+        for (i = 0; i < myCat.length; i++) { 
+            
+            if(Number(myCat[i]) !=0){
+                selectCATVal.push(Number(myCat[i]));
+            }
+        }
         
         stackfunctionsDates.dates = function(callback) { 
                             
@@ -115,9 +122,8 @@ module.exports = (app) => {
     
         };
 
-        //console.log("SELECT CAT Value: " + myCat);
         //console.log("SELECT PERIOD Value: " + myVal);
-        //if (!myCat) {
+        //if (selectCATVal.length ==0) {
         // var dates = getDates(myVal).then(function (result){
         async.parallel( stackfunctionsDates, function(err,result){
                 var initialDate = result.dates.initialdate;
@@ -142,15 +148,15 @@ module.exports = (app) => {
 
          }
         //console.log("CATEGORY ARRAY: "+ JSON.stringify(CategoryArrayIDS));
-        if(!myCat){  // make calculations including all categories
+        if(selectCATVal.length ==0){  // make calculations including all categories
             stackfunctionsTransactions.transactions = function(callback) { 
                     
                 var sql = 'SELECT A.*, B.*  \
                             FROM public.ezfin_transactions as A \
                             INNER JOIN   public.ezfin_category as B on  A.idcategory = B.idcat WHERE A.duedate between :start_date AND :end_date';
-            // and idcategory IN(:catlist) \
+           
             db.sequelize.query(sql,
-            { replacements: { /*catlist: [Number(myCat) , 16] , */start_date: initialDate , end_date: finalDate }, type: db.sequelize.QueryTypes.SELECT }
+            { replacements: {start_date: initialDate , end_date: finalDate }, type: db.sequelize.QueryTypes.SELECT }
             ).then(function(transResult){
                     //console.log("categories result: " + JSON.stringify(categoryResult));
                     var err = null;
@@ -197,17 +203,15 @@ module.exports = (app) => {
             //(2) Get data for the specified category
             stackfunctionsTransactions.transactions = function(callback) { 
                     
-                var sql = 'SELECT t.*,public.ezfin_category.*  FROM ( \
-                    SELECT sum (amount)as value, idcategory, duedate  FROM public.ezfin_transactions \
-                    WHERE  duedate between :start_date \
-                    and :end_date \
-                    and idcategory IN(:catlist) \
-                    group by idcategory \
-                        ) as t, public.ezfin_category  \
-                        WHERE t.idcategory = public.ezfin_category.idcat';
-                
+                var sql = 'SELECT A.*, B.*  \
+                FROM public.ezfin_transactions as A \
+                INNER JOIN   public.ezfin_category as B on  A.idcategory = B.idcat \
+                WHERE A.duedate between :start_date AND :end_date \
+                and idcategory IN(:catlist)';
+
+                                
             db.sequelize.query(sql,
-            { replacements: { catlist: [Number(myCat) , 16] , start_date: initialDate , end_date: finalDate }, type: db.sequelize.QueryTypes.SELECT }
+            { replacements: { catlist: selectCATVal , start_date: initialDate , end_date: finalDate }, type: db.sequelize.QueryTypes.SELECT }
             ).then(function(transResult){
                     //console.log("categories result: " + JSON.stringify(categoryResult));
                     var err = null;
@@ -224,7 +228,7 @@ module.exports = (app) => {
                 //console.log("\n==============================================\n");
                 //console.log("PARALLEL RESULTS FOR VIEWS: " + JSON.stringify(views));
                 transactions  = result.transactions;
-                if(myCat) {  // make calculations including only the selected categories. Must calculate the total spent in the period
+                if(selectCATVal.length > 0) {  // make calculations including only the selected categories. Must calculate the total spent in the period
                     totalCredit = result.totalCredit;
                     totalDebit = result.totalDebit;
                 }
@@ -248,7 +252,7 @@ module.exports = (app) => {
                     
                 }
 
-                if(myCat){
+                if(selectCATVal.length > 0){
                     var totalLocalCred = 0;
                     var totalLocalDeb = 0;
                     for (var i = 0 ; i < transactions.length  ; i++){
@@ -270,26 +274,15 @@ module.exports = (app) => {
                 }
 
                 var yValues = [];
-                
                 var xValues= [];
-                //yValues.push([8,7,5,3,5,3,21,5,6,2,3,12,45,54,23,12,11,23,1,22,33,22,23,45,56,76,54,56,76,67,21]);
-                //yValues.push([7,4,32,3,4,5,8,9,7,6,35,5,3,2,6,5,9,12,32,14,12,11,53,21,23,1,6,7,8,7,21]);
-                //yValues.push([1,2,3,4,5,6,7,8,9,21,2,1,2,2,3,21,1,2,5,4,7,8,5,6,3,12,23,43,23,12,43]);
-                //yValues.push([7,4,32,3,4,5,8,9,7,6,35,5,3,2,6,5,9,12,32,14,12,11,53,21,23,1,6,7,8,7,21]);
-                //yValues.push([8,7,5,3,5,3,21,5,6,2,3,12,45,54,23,12,11,23,1,22,33,22,23,45,56,76,54,56,76,67,21]);
-                //yValues.push([1,2,3,4,5,6,7,8,9,21,2,1,2,2,3,21,1,2,5,4,7,8,5,6,3,12,23,43,23,12,43]);
-                //yValues.push([7,4,32,3,4,5,8,9,7,6,35,5,3,2,6,5,9,12,32,14,12,11,53,21,23,1,6,7,8,7,21]);
-                //yValues.push([8,7,5,3,5,3,21,5,6,2,3,12,45,54,23,12,11,23,1,22,33,22,23,45,56,76,54,56,76,67,21]);
-                //yValues.push([1,2,3,4,5,6,7,8,9,21,2,1,2,2,3,21,1,2,5,4,7,8,5,6,3,12,23,43,23,12,43]);
-                //yValues.push([7,4,32,3,4,5,8,9,7,6,35,5,3,2,6,5,9,12,32,14,12,11,53,21,23,1,6,7,8,7,21]);
-                //yValues.push([8,7,5,3,5,3,21,5,6,2,3,12,45,54,23,12,11,23,1,22,33,22,23,45,56,76,54,56,76,67,21]);
+                
                 //create TRACES
-                console.log("WALKTHROUGH-------------------------------");
+                //console.log("WALKTHROUGH-------------------------------");
                 // first walk through TRaces (Categorires)
                 for (var i =0 ; i < numberOfTraces; i++) {
                     var yValueLine = [];
                     xValues[i] = categoryObj[i].alias;
-                    console.log("Label"+i+": "+xValues[i]);
+                    //console.log("Label"+i+": "+xValues[i]);
                     myCategory = categoryObj[i].idcat;
                     //walk through Dates Array
                     for (var d=0 ; d < DatesArray.length ; d ++){
@@ -299,13 +292,13 @@ module.exports = (app) => {
                             for (var j = 0 ; j < transactions.length  ; j++){
                                
                                 if (transactions[j].duedate == myDate ){
-                                console.log("my Date"+d+": "+myDate);
-                                console.log("Due Date"+j+": "+transactions[j].duedate);
-                                        console.log("my Cat"+i+": "+myCategory);
-                                        console.log("Trans Cat id"+j+": "+transactions[j].idcategory);
+                                //console.log("my Date"+d+": "+myDate);
+                                //console.log("Due Date"+j+": "+transactions[j].duedate);
+                                        //console.log("my Cat"+i+": "+myCategory);
+                                        //console.log("Trans Cat id"+j+": "+transactions[j].idcategory);
                                     if (transactions[j].idcategory == myCategory) {
-                                        console.log("my Cat"+i+": "+myCategory);
-                                        console.log("Cat id"+j+": "+transactions[j].idcategory);
+                                        //console.log("my Cat"+i+": "+myCategory);
+                                        //console.log("Cat id"+j+": "+transactions[j].idcategory);
                                         if(transactions[j].operation == 0){
                                             yValueLine[d]+=transactions[j].amount;
                                         }
@@ -318,7 +311,7 @@ module.exports = (app) => {
                                 
                             }
                     }
-                    console.log("YValues: "+ JSON.stringify(yValueLine));
+                    //console.log("YValues: "+ JSON.stringify(yValueLine));
                     yValues.push(yValueLine);
                 }
                     //create TRACES
