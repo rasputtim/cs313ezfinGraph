@@ -6,14 +6,11 @@ var morgan = require('morgan');
 var async = require('async');
 ///////  DATABASE SETUP ////////
 
-//var User = require('./models/user');
+
 //////////////////   Database init
 const db = require('./config/db.config.js');
-
-const Category = db.category;
 const User = db.tusuario;
-const Transaction = db.transactions;
-const Balview = db.balview;
+
 // force: true will drop the table if it already exists
 db.sequelize.sync({force: false}).then(() => {
     console.log('Drop and Resync with { force: false }');
@@ -79,48 +76,50 @@ var sessionChecker = (req, res, next) => {
 };
 
 
+/////// ASYNC PARALLELLL
+/*
+var stackfunctions = {
+    categories: function(callback) { 
+                Category.findAll().then(function(categoryResult){
+                    //console.log("categories result: " + JSON.stringify(categoryResult));
+                    var err = null;
+                    callback(err, categoryResult);
+                });
+            }, 
+    balviews: function(callback){
+            Balview.findAll().then(function(balviewResult){
+            //console.log("Periods result: " + JSON.stringify(balviewResult));
+            var err = null;
+            callback(err, balviewResult);
+        });
+    }
+};
+*/
 
-//var index = require('./routes/index');
-//app.use('/', index);
-// route for Home-Page
+
+
+// ROUTES //////////////////////
+//NORMAL PAGES /////////////////
+require('./routes/logout.route')(app);
+require('./routes/home')(app);
+///////////////////PAGES THAT CALL AJAX////////////////////////////
+require('./routes/inctrans.route')(app);
+require('./routes/spendbycat.route')(app);
+require('./routes/cashflow.route')(app);
+///////AJAX ////////////////////////////
+require('./routes/getgraphdata.route')(app);
+require('./routes/getgraphcashflow.route')(app);
+
 app.get('/', sessionChecker, (req, res) => {
     
     res.redirect('/login');
 });
 
-
-
-// route for user signup
-app.route('/signup')
-    .get(sessionChecker, (req, res) => {
-        res.render('signup');
-    })
-    .post((req, res) => {
-        User.create({
-            username: req.body.username,
-            email: req.body.email,
-            password: req.body.password
-        })
-        .then(user => {
-            req.session.user = user.dataValues;
-            res.redirect('/dashboard');
-        })
-        .catch(error => {
-            res.redirect('/signup');
-        });
-    });
-
-
-// route for user Login
+// route for user Login 
 app.route('/login')
     .get(sessionChecker, (req, res) => {
         //controller
-        var name = "Salvatore";
-        var emailaddress = "meuemail@teste.com";
-
-        //var params = {username: name , email: emailaddress, graph: graphHTML};
-        //view
-        //res.render('login',params);
+              
         res.render('login',{ user:  req.session.user, loggedin:false , index1_active:false, index2_active:false, index3_active:false ,index4_active:false,index4_active:false} );
     })
     .post((req, res) => {
@@ -142,132 +141,11 @@ app.route('/login')
     });
 
 
-// route for user's dashboard
-app.get('/dashboard', (req, res) => {
-    if (req.session.user && req.cookies.user_sid) {
-        res.redirect('/home');
-    } else {
-        res.redirect('/login');
-    }
-});
-
-
-//var inctrans = require('./routes/inctrans');
-//app.use('/inctrans', inctrans);
-
-
-
-/////// ASYNC PARALLELLL
-var stackfunctions = {
-    categories: function(callback) { 
-                Category.findAll().then(function(categoryResult){
-                    //console.log("categories result: " + JSON.stringify(categoryResult));
-                    var err = null;
-                    callback(err, categoryResult);
-                });
-            }, 
-    balviews: function(callback){
-            Balview.findAll().then(function(balviewResult){
-            //console.log("Periods result: " + JSON.stringify(balviewResult));
-            var err = null;
-            callback(err, balviewResult);
-        });
-    }
-};
-
-
-
-
-
-////////////////////
-
-
-
-const catlist = require('./controllers/category.controller.js');
-// All this objects are exported n the ./controllers/index.js file
-const catlistController = require('./controllers').category_controller;
-const userController = require('./controllers').user_controller;
-const transactionController = require('./controllers').transaction_controller;
-const balviewController = require('./controllers').balview_controller;
-
-
-
-
-
-
-app.get('/form', (req, res) => {
-    //if (req.session.user && req.cookies.user_sid) {
-        res.render('form');
-    //} else {
-    //    res.redirect('/login');
-    //}
-});
-///////////////////PAGES THAT CALL AJAX////////////////////////////
-require('./routes/inctrans.route')(app);
-require('./routes/spendbycat.route')(app);
-require('./routes/cashflow.route')(app);
-///////AJAX ////////////////////////////
-require('./routes/getgraphdata.route')(app);
-require('./routes/getgraphcashflow.route')(app);
-
-// second route
-app.get('/searching', function(req, res){
-
-    
-    /* THIS IS WORKING AJAX WITH PARALLEL 
-    async.parallel( stackfunctions, function(err,result){
-        var cats = result.categories;
-        var views = result.balviews;
-        //console.log("PARALLEL RESULTS FOR CATEGORIES: " + JSON.stringify(cats));
-        //console.log("\n==============================================\n");
-        //console.log("PARALLEL RESULTS FOR VIEWS: " + JSON.stringify(views));
-        craig = JSON.stringify(views);
-        console.log(craig);
-        res.send(craig);
-    });
-    */
-    Balview.findAll().then(function(balviewResult){
-        //console.log("Periods result: " + JSON.stringify(balviewResult));
-     //   var err = null;
-        //results = req.body.query.results.RDF.item[0]['about'];
-        craig = JSON.stringify(balviewResult);
-        //console.log(craig);
-        res.send(craig);
-    });
-	
-
-});
-
-// route for user Login
-//require('./routes/home.js')(app);
-
-/////////////  HOME ////////////////////
-require('./routes/home')(app);
-
-
-// route for user logout
-app.get('/logout', (req, res) => {
-    if (req.session.user && req.cookies.user_sid) {
-        res.clearCookie('user_sid');
-        res.redirect('/');
-    } else {
-        res.redirect('/login');
-    }
-});
-
 
 // route for handling 404 requests(unavailable routes)
 app.use(function (req, res, next) {
   res.status(404).send("Sorry can't find that!")
 });
-
-
- 
-require('./routes/customer.route.js')(app);  ///for findall
-  
-
-
-
 
 
 // start the express server
