@@ -151,7 +151,7 @@ module.exports = (app) => {
         if(selectCATVal.length ==0){  // make calculations including all categories
             stackfunctionsTransactions.transactions = function(callback) { 
                     
-                var sql = 'SELECT A.*, B.*  \
+                var sql = 'SELECT A.*, B.name, B.icon,B.alias,B.description as catdescription, B.operation  \
                             FROM public.ezfin_transactions as A \
                             INNER JOIN   public.ezfin_category as B on  A.idcategory = B.idcat WHERE A.duedate between :start_date AND :end_date';
            
@@ -203,7 +203,7 @@ module.exports = (app) => {
             //(2) Get data for the specified category
             stackfunctionsTransactions.transactions = function(callback) { 
                     
-                var sql = 'SELECT A.*, B.*  \
+                var sql = 'SELECT A.*, B.name, B.icon,B.alias,B.description as catdescription, B.operation  \
                 FROM public.ezfin_transactions as A \
                 INNER JOIN   public.ezfin_category as B on  A.idcategory = B.idcat \
                 WHERE A.duedate between :start_date AND :end_date \
@@ -336,6 +336,8 @@ module.exports = (app) => {
                 }else{
             
                 }
+                data.push(transactions);
+                //console.log("DATA: " + JSON.stringify(data));
                 res.send(data);
             
             });

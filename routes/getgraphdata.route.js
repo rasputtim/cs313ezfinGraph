@@ -83,10 +83,10 @@ module.exports = (app) => {
             stackfunctionsTransactions.totalCredit = function(callback) {
                 
                     var sql = 'SELECT sum (a.amount)as total  FROM public.ezfin_transactions as A \
-                INNER JOIN public.ezfin_category as B ON A.idcategory = B.idcat \
-                WHERE  duedate between :start_date \
-                    and :end_date \
-                AND B.operation = 0';
+                                INNER JOIN public.ezfin_category as B ON A.idcategory = B.idcat \
+                                WHERE  duedate between :start_date \
+                                    and :end_date \
+                                AND B.operation = 0';
                 
                     db.sequelize.query(sql,
                     { replacements: {  start_date: initialDate , end_date: finalDate }, type: db.sequelize.QueryTypes.SELECT }
@@ -100,10 +100,10 @@ module.exports = (app) => {
             stackfunctionsTransactions.totalDebit = function(callback) {
                 
                 var sql = 'SELECT sum (a.amount)as total  FROM public.ezfin_transactions as A \
-            INNER JOIN public.ezfin_category as B ON A.idcategory = B.idcat \
-            WHERE  duedate between :start_date \
-                and :end_date \
-            AND B.operation = 1';
+                            INNER JOIN public.ezfin_category as B ON A.idcategory = B.idcat \
+                            WHERE  duedate between :start_date \
+                                and :end_date \
+                            AND B.operation = 1';
             
                 db.sequelize.query(sql,
                 { replacements: {  start_date: initialDate , end_date: finalDate }, type: db.sequelize.QueryTypes.SELECT }
@@ -119,13 +119,13 @@ module.exports = (app) => {
             stackfunctionsTransactions.transactions = function(callback) { 
                     
                 var sql = 'SELECT t.*,public.ezfin_category.*  FROM ( \
-                    SELECT sum (amount)as value, idcategory  FROM public.ezfin_transactions \
-                    WHERE  duedate between :start_date \
-                    and :end_date \
-                    and idcategory IN(:catlist) \
-                    group by idcategory \
-                        ) as t, public.ezfin_category  \
-                        WHERE t.idcategory = public.ezfin_category.idcat';
+                            SELECT sum (amount)as value, idcategory  FROM public.ezfin_transactions \
+                            WHERE  duedate between :start_date \
+                            and :end_date \
+                            and idcategory IN(:catlist) \
+                            group by idcategory \
+                            ) as t, public.ezfin_category  \
+                            WHERE t.idcategory = public.ezfin_category.idcat';
                 
             db.sequelize.query(sql,
             { replacements: { catlist: selectCATVal , start_date: initialDate , end_date: finalDate }, type: db.sequelize.QueryTypes.SELECT }
@@ -154,7 +154,7 @@ module.exports = (app) => {
                     labelsCredit = [];
                     valuesDebit = [];
                     labelsDebit = [];
-                console.log("TRANSACTION: "+ JSON.stringify(transactions));
+                //console.log("TRANSACTION: "+ JSON.stringify(transactions));
                 for (var i = 0 ; i < transactions.length  ; i++){
                     if(transactions[i].operation == 0) {
                         valuesCredit.push(transactions[i].value); 

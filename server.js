@@ -14,7 +14,6 @@ const User = db.tusuario;
 // force: true will drop the table if it already exists
 db.sequelize.sync({force: false}).then(() => {
     console.log('Drop and Resync with { force: false }');
-    console.log('users table has been successfully created, if one doesn\'t exist');
   }).catch(error => console.log('This error occured', error));
 
 
@@ -77,26 +76,6 @@ var sessionChecker = (req, res, next) => {
 
 
 /////// ASYNC PARALLELLL
-/*
-var stackfunctions = {
-    categories: function(callback) { 
-                Category.findAll().then(function(categoryResult){
-                    //console.log("categories result: " + JSON.stringify(categoryResult));
-                    var err = null;
-                    callback(err, categoryResult);
-                });
-            }, 
-    balviews: function(callback){
-            Balview.findAll().then(function(balviewResult){
-            //console.log("Periods result: " + JSON.stringify(balviewResult));
-            var err = null;
-            callback(err, balviewResult);
-        });
-    }
-};
-*/
-
-
 
 // ROUTES //////////////////////
 //NORMAL PAGES /////////////////

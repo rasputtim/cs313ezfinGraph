@@ -27,20 +27,18 @@
 		</div>	
 	
 		<div class="col-lg-9">
+				<!---// creates a container for the transaction form  -->
+	 			<div id="graphDiv"></div>
 				<div>
-						<div class="results" id=results></div>
-						<!--  Host Side templating Javascript-->
-                        <script id="search-results" type="text/x-handlebars-template">
-                            {{#each resultsArray}}
-                              <li><a href={{keydate}}>{{title}}</a><br>{{description}}></li>
-                            {{/each}}
-                            <br>
-                            </ul>
-						</script>
 						
+						<div class="results" id=results>
+								
+						</div>
+
+										
+					
                 </div>
-	 <!---// creates a container for the transaction form  -->
-	 <div id="myDiv">
+	 
 
 	 </div>
 	<!--- < include content.ejs >
@@ -70,65 +68,123 @@
 </div>	
 </div>	
 </div>
-
-
-
-
-
-
-
-
 	
 </div>
 
 <script src="js/mydatepick.js"></script>
+
 <script>
-		$(function(){
-  var source = $("#search-results").html();
-  var dataTemplate = Handlebars.compile(source);
-  $results = $('#results')
-				$( "#search" ).click(function() {
-					var parameters = { search: $(this).val() };
-					$.get( '/searching',parameters, function(data) {
-						var data2 = jQuery.parseJSON(data);
-						if (data2 instanceof Array) {
-							$results.html( dataTemplate({resultsArray:data2}) ); 
-						} else {
-							$results.html(data2);
-						};
-					});
-					});
-				});
-</script>
-<script>
+
+function getbackgroundTD(operation){
+	//credit
+	if(operation == 0){
+			tableData = '<td class="bg-success">';
+		}
+		//debit
+		if(operation == 1){
+			tableData = '<td class="bg-danger">';
+		}
+		//informative
+		if(operation == 2){
+			tableData = '<td class="bg-info">';
+		}
+		return tableData;
+}
+function CreateTableFromJSON(data){
+
+
+	var tableData = '<table class = "table table-sm table-dark"><thead class="thead-dark"><tr><th rowspan="2">Id</th><th rowspan="2">Icon</th><th style="width: 150px">Due-Date</th><th>Status</th><th>Amount</th>';
+		tableData += '<tr><th style="width: 150px">Payment-Date</th><th colspan="2">Description</th></tr></thead>';
+	$.each(data, function(index, data) {
+		tableData += '<tr >';
+		
+			tableData += '<td rowspan="2"  class="clickable-row" data-href="https://globo.com"  style="text-align: center; vertical-align: middle;" >'+index+'</td>';
+			tableData += '<td rowspan="2"> <img class="trans_icon" src="/images/'+data.icon.trim()+'" alt="'+data.alias+'"></td>';
+			tableData +=  getbackgroundTD(data.operation)+data.duedate+'</td>';
+			//status
+			tableData += getbackgroundTD(data.operation);
+					if(data.status == 1 && data.operation ==0){
+						tableData += "RECEIVED";
+					}
+					if(data.status == 1 && data.operation ==1){
+						tableData += "PAID";
+					}
+					if(data.status == 0 && data.operation ==0){
+						tableData += "UNRECEIVED";
+					}
+					if(data.status == 0 && data.operation ==1){
+						tableData += "UNPAID";
+					}
+			tableData += '</td>';
+			tableData += getbackgroundTD(data.operation)+"$  " +data.amount.toFixed(2)+'</td>';
+			if(data.operation == 0){
+					tableData += '<tr class="bg-success">';
+				}
+				//debit
+				if(data.operation == 1){
+					tableData += '<tr class="bg-danger">';
+				}
+				//informative
+				if(data.operation == 2){
+					tableData += '<tr class="bg-info">';
+				}
+			
+					tableData += '<td>'+data.paymentdate+'</td>';
+					
+					tableData += '<td colspan = "2">'+data.description+' </td>';
+			tableData += '</tr>';
+	});
+
+	$('#results').html(tableData);
+
+};
+
+$("#container").on('click-row.bs.table', function (e, row, $element) {
+    window.location = $element.data('href');
+});	
+
 $("#mybutton").click(function() {
-	$("#myDiv").html("");
+	$("#graphDiv").html("");
 	
 	var layout = {
-  barmode: 'stack',
-  
-  title: 'Cashflow',
-  showlegend: true,
-  xaxis: {
-    tickangle: -45
-  },
-  yaxis: {
-    zeroline: true,
-	gridwidth: 2,
-	range: [-60, 50],
-	exponentformat: 'e',
-    showexponent: 'all'
-  }
-  
-};
+					barmode: 'stack',
+					
+					title: 'Cashflow',
+					showlegend: true,
+					xaxis: {
+						tickangle: -45
+					},
+					yaxis: {
+						zeroline: true,
+						gridwidth: 2,
+						range: [-60, 50],
+						exponentformat: 'e',
+						showexponent: 'all'
+					}
+					
+				};
 	var parameters = { category_select: $("#category_select").val(),
 		period_select: $("#period_select").val()
 	};
-//alert('VAL: '+ $("#category_select").val());
-	$.get( '/getgraphcashflow',parameters, function(data) {
+	
+ 
+	$results = $('#results')
+	//alert('VAL: '+ $("#category_select").val());
+	$.get( '/getgraphcashflow',parameters, function (data) {
 		//alert (data.length);
-		if (data.length > 0)
-		Plotly.newPlot('myDiv', data, layout, {showSendToCloud:true});	
+		
+		if (data.length > 0){
+		//1 get the transactions from the data array
+		var transactions = data.pop();
+		CreateTableFromJSON(transactions);
+		//if (transactions instanceof Array) {
+		//					$results.html( dataTemplate({resultsArray:transactions}) ); 
+		//				} else {
+		//					$results.html(transactions);
+		//				};
+		//2 - plot the graph
+		Plotly.newPlot('graphDiv', data, layout, {showSendToCloud:true});
+		}	
 	});
 
 
@@ -141,9 +197,13 @@ $("#mybutton").click(function() {
 </script>
 <script>
 
-	$(document).ready(function() {	
+
+	jQuery(document).ready(function($) {
 //		
-	
+	$(".clickable-row").click(function() {
+        alert("click");
+        window.document.location = $(this).data("href");
+    });
 	}); //
 	$(window).load(function() {
 		//
