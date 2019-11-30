@@ -27,22 +27,17 @@
 		</div>	
 	
 		<div class="col-lg-9">
-				<div>
-						<div class="results" id=results></div>
-						<!--  Host Side templating Javascript-->
-                        <script id="search-results" type="text/x-handlebars-template">
-                            {{#each resultsArray}}
-                              <li><a href={{keydate}}>{{title}}</a><br>{{description}}></li>
-                            {{/each}}
-                            <br>
-                            </ul>
-						</script>
-						
-                </div>
+				
 	 <!---// creates a container for the transaction form  -->
 	 <div id="myDiv">
 
 	 </div>
+	 <div>
+			<div class="results" id=results></div>
+			<!--  Host Side templating Javascript-->
+			
+			
+	</div>
 	<!--- < include content.ejs >
 	< include viewslist.ejs >
     //ends the transaction form container -->
@@ -82,25 +77,75 @@
 </div>
 
 <script src="js/mydatepick.js"></script>
+
 <script>
-		$(function(){
-  var source = $("#search-results").html();
-  var dataTemplate = Handlebars.compile(source);
-  $results = $('#results')
-				$( "#search" ).click(function() {
-					var parameters = { search: $(this).val() };
-					$.get( '/searching',parameters, function(data) {
-						var data2 = jQuery.parseJSON(data);
-						if (data2 instanceof Array) {
-							$results.html( dataTemplate({resultsArray:data2}) ); 
-						} else {
-							$results.html(data2);
-						};
-					});
-					});
-				});
-</script>
-<script>
+
+function getbackgroundTD(operation){
+	//credit
+	if(operation == 0){
+			tableData = '<td class="bg-success">';
+		}
+		//debit
+		if(operation == 1){
+			tableData = '<td class="bg-danger">';
+		}
+		//informative
+		if(operation == 2){
+			tableData = '<td class="bg-info">';
+		}
+		return tableData;
+}
+
+function CreateTableFromJSON(data){
+
+	
+var tableData = '<table class = "table table-bordered table-condensed table-striped table-hover table-sm table-dark">';
+	tableData += '<thead class="thead-dark"><tr><th rowspan="2">Id</th><th rowspan="2">Icon</th><th style="width: 150px">Name</th><th>Alias</th><th>Operation</th>';
+	tableData += '<tr class="table-row" ><th style="width: 150px">Total Amount</th><th colspan="2">Description</th></tr></thead>';
+$.each(data, function(index, data) {
+	tableData += '<tr class="table-row" >';
+	
+		tableData += '<td rowspan="2"  style="text-align: center; vertical-align: middle;" >'+index+'</td>';
+		tableData += '<td rowspan="2"> <img class="trans_icon" src="/images/'+data.icon.trim()+'" alt="'+data.alias+'"></td>';
+		tableData +=  getbackgroundTD(data.operation)+data.name+'</td>';
+		//status
+		tableData += getbackgroundTD(data.operation)+data.alias+'</td>';;
+				
+		tableData += getbackgroundTD(data.operation);
+		if(data.operation ==0){
+					tableData += "CREDIT";
+				}
+				if(data.operation ==1){
+					tableData += "DEBIT";
+				}
+				if(data.operation ==2){
+					tableData += "INFORMATIVE";
+				}
+				
+		tableData += '</td>';
+		if(data.operation == 0){
+				tableData += '<tr  class="table-row bg-success" >';
+			}
+			//debit
+			if(data.operation == 1){
+				tableData += '<tr  class="table-row bg-danger">';
+			}
+			//informative
+			if(data.operation == 2){
+				tableData += '<tr class="table-row bg-info">';
+			}
+		
+				tableData += '<td> $ '+data.value.toFixed(2)+'</td>';
+				
+				tableData += '<td colspan = "2">'+data.description+' </td>';
+		tableData += '</tr>';
+		
+});
+
+$('#results').html(tableData);
+
+};
+
 $("#mybutton").click(function() {
 	$("#myDiv").html("");
 	var layout = {
@@ -134,8 +179,11 @@ $("#mybutton").click(function() {
 //alert('VAL: '+ $("#category_select").val());
 	$.get( '/getgraphdata',parameters, function(data) {
 		//alert (data.length);
-		if (data.length > 0)
-		Plotly.newPlot('myDiv', data, layout, {showSendToCloud:true});	
+		if (data.length > 0){
+		var transactions = data.pop();
+		CreateTableFromJSON(transactions);
+		Plotly.newPlot('myDiv', data, layout, {showSendToCloud:true});
+		}	
 	});
 
 

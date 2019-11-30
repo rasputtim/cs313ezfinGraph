@@ -90,15 +90,36 @@ function getbackgroundTD(operation){
 		}
 		return tableData;
 }
+
+
 function CreateTableFromJSON(data){
 
+	var tableData =	'<table class="table table-bordered table-condensed table-striped table-hover table-sm table-dark">';
+			tableData +=	'<tr><th>Name</th><th>Email</th><th>Country</th></tr>';
+			tableData +=	' <tr class="table-row" data-href="http://tutorialsplane.com"><td>Jhohn</td><td>jhone@gmail.com</td><td>USA</td></tr>';
+			tableData +=	'<tr class="table-row" data-href="http://tutorialsplane.com"><td>Kelly</td><td>kelly@gmail.com</td><td>USA</td></tr>';
+			tableData +=	'<tr class="table-row" data-href="http://tutorialsplane.com"><td>Kamana</td><td>kamna@gmail.com</td><td>India</td></tr>';
+			tableData +=	'<tr class="table-row" data-href="http://tutorialsplane.com"><td>Anay</td><td>anay@gmail.com</td><td>Canada</td></tr>';
+			tableData +=	'</table>';
+			
+			$( ".table-row" ).click(function() {
+  		alert( "Handler for .click() called." );
+		});
+		var h = document.getElementsByClassName("table-row");
 
-	var tableData = '<table class = "table table-sm table-dark"><thead class="thead-dark"><tr><th rowspan="2">Id</th><th rowspan="2">Icon</th><th style="width: 150px">Due-Date</th><th>Status</th><th>Amount</th>';
-		tableData += '<tr><th style="width: 150px">Payment-Date</th><th colspan="2">Description</th></tr></thead>';
+
+		$('#results').html(tableData);
+}
+
+function CreateTableFromJSON2(data){
+
+	
+	var tableData = '<table class = "table table-bordered table-condensed table-striped table-hover table-sm table-dark"><thead class="thead-dark"><tr><th rowspan="2">Id</th><th rowspan="2">Icon</th><th style="width: 150px">Due-Date</th><th>Status</th><th>Amount</th>';
+		tableData += '<tr class="table-row" data-href="http://tutorialsplane.com" ><th style="width: 150px">Payment-Date</th><th colspan="2">Description</th></tr></thead>';
 	$.each(data, function(index, data) {
-		tableData += '<tr >';
+		tableData += '<tr class="table-row" data-href="http://tutorialsplane.com" >';
 		
-			tableData += '<td rowspan="2"  class="clickable-row" data-href="https://globo.com"  style="text-align: center; vertical-align: middle;" >'+index+'</td>';
+			tableData += '<td rowspan="2"  style="text-align: center; vertical-align: middle;" >'+index+'</td>';
 			tableData += '<td rowspan="2"> <img class="trans_icon" src="/images/'+data.icon.trim()+'" alt="'+data.alias+'"></td>';
 			tableData +=  getbackgroundTD(data.operation)+data.duedate+'</td>';
 			//status
@@ -118,11 +139,11 @@ function CreateTableFromJSON(data){
 			tableData += '</td>';
 			tableData += getbackgroundTD(data.operation)+"$  " +data.amount.toFixed(2)+'</td>';
 			if(data.operation == 0){
-					tableData += '<tr class="bg-success">';
+					tableData += '<tr  class="table-row bg-success" data-href="http://tutorialsplane.com">';
 				}
 				//debit
 				if(data.operation == 1){
-					tableData += '<tr class="bg-danger">';
+					tableData += '<tr  class="table-row bg-danger" data-href="http://tutorialsplane.com">';
 				}
 				//informative
 				if(data.operation == 2){
@@ -133,6 +154,7 @@ function CreateTableFromJSON(data){
 					
 					tableData += '<td colspan = "2">'+data.description+' </td>';
 			tableData += '</tr>';
+			
 	});
 
 	$('#results').html(tableData);
@@ -198,13 +220,12 @@ $("#mybutton").click(function() {
 <script>
 
 
-	jQuery(document).ready(function($) {
-//		
-	$(".clickable-row").click(function() {
-        alert("click");
-        window.document.location = $(this).data("href");
+$(document).ready(function($) {
+    $(".table-row").click(function() {
+		 window.document.location = $(this).data("href");
     });
-	}); //
+});
+ //
 	$(window).load(function() {
 		//
 	//Get a reference to the link on the page

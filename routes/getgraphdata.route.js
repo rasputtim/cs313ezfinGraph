@@ -211,6 +211,7 @@ module.exports = (app) => {
                 }else{
             
                 }
+                data.push(transactions);
                 res.send(data);
             
             });
