@@ -1,0 +1,54 @@
+After completing the assignment, please answer the questions in this text file and submit it to I-Learn.
+
+1. Project Title / One sentence description:
+
+EzFin Dashboard
+The purpose is to show graphs and figures with cashflow and spends by category from the financial data stored in the project from the first semester.
+
+2. Copy and paste the URL for your web application (if applicable):
+
+https://serene-dawn-76163.herokuapp.com/
+
+3. Copy and paste the URL for your source code repository (e.g., GitHub):
+
+https://github.com/rasputtim/cs313ezfinGraph.git
+
+4. Describe the functionality that is currently working, along with any special instructions of how to use your web application:
+
+The dashboard is working. Showing graphs by category and cashflow, and using same data added by the Ezfin application (1st semester).
+the login is working, using the same password created by the PHP system of the first semester.
+The session control is working (login, logout, persistence)
+
+1 - The Database Layer is working
+2 - The AJAX interface is Working
+
+instrucions:
+
+The username: admin
+password: 123456
+
+to use:
+	1 - login
+	2 - go to the option Dashboard->cashflow.
+	3- Select the period and categorries in the left menu and click get graph.  (AJAX)
+	4 - The selected graph will be shown in the screen.
+
+
+5. Describe the features that are not yet working correctly.
+
+everything is working
+
+6. Please select the category you feel best describes your assignment: 5
+1 - Some attempt was made
+2 - Developing, but significantly deficient
+3 - Slightly deficient, but still mostly adequate
+4 - Meets requirements
+5 - Shows creativity and excels above and beyond requirements
+
+
+7. Provide a brief justification (1-2 sentences) for selecting that category.
+
+I had to be creative to avoid the callback Hell. Use async module to perform several database connections at same time.
+besides the use of bootstrap to have a good looking application in the client side.
+
+8. Please list any questions you have for the instructor regarding this assignment or this week's topic.

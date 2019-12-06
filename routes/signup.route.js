@@ -1,4 +1,8 @@
-
+//////////////////   Database init
+const db = require('../config/db.config.js');
+const User = db.tusuario;
+// middleware function to check for logged-in users
+var sessionChecker = require('./sessionChequer');
 // route for user signup
 //this route is not used anymore
 module.exports = (app) => {

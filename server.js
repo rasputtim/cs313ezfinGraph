@@ -77,7 +77,7 @@ require('./routes/getgraphcashflow.route')(app);
 require('./routes/root.route')(app);
 // route for user Login 
 require('./routes/login.route')(app);
-
+require('./routes/signup.route')(app);
 
 
 // route for handling 404 requests(unavailable routes)
