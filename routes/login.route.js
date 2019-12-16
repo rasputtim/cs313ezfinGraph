@@ -9,8 +9,12 @@ module.exports = (app) => {
     app.route('/login')
     .get(sessionChecker, (req, res) => {
         //controller
-              
-        res.render('login',{ user:  req.session.user, loggedin:false , index1_active:false, index2_active:false, index3_active:false ,index4_active:false,index4_active:false} );
+        var index1 = '';
+        var index2 = '';
+        var index3 = '';
+        var index4 = 'active';
+        var index5 = '';
+        res.render('login',{ user:  req.session.user, loggedin:false , index1_active: index1, index2_active: index2, index3_active: index3 ,index4_active: index4,index5_active: index5} );
     })
     .post((req, res) => {
         var username = req.body.username,

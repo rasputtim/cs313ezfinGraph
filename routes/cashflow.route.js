@@ -63,11 +63,17 @@ app.get('/cashflow', (req, res) => {
         var views = result.balviews;
         var selCats = result.selectCategory;
         var selViews = result.selectBalview;
+        var index1 = '';
+        var index2 = 'active';
+        var index3 = '';
+        var index4 = '';
+        var index5 = '';
+
         //console.log("PARALLEL RESULTS FOR CATEGORIES: " + JSON.stringify(cats));
         //console.log("\n==============================================\n");
         //console.log("PARALLEL RESULTS FOR VIEWS: " + JSON.stringify(views));
         //console.log("SELECT BY SQL: " + selCats);
-        res.render('cashflow',{select_categories: selCats, select_views: selViews, periods: views, cats:cats , user:  req.session.user, loggedin:true , index1_active:false, index2_active:false, index3_active:false ,index4_active:false,index4_active:false} );
+        res.render('cashflow',{select_categories: selCats, select_views: selViews, periods: views, cats:cats , user:  req.session.user, loggedin:true , index1_active: index1, index2_active: index2, index3_active: index3 ,index4_active: index4,index5_active: index5} );
     
     });
     
