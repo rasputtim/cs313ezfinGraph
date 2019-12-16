@@ -92,26 +92,9 @@ function getbackgroundTD(operation){
 }
 
 
+
+
 function CreateTableFromJSON(data){
-
-	var tableData =	'<table class="table table-bordered table-condensed table-striped table-hover table-sm table-dark">';
-			tableData +=	'<tr><th>Name</th><th>Email</th><th>Country</th></tr>';
-			tableData +=	' <tr class="table-row" data-href="http://tutorialsplane.com"><td>Jhohn</td><td>jhone@gmail.com</td><td>USA</td></tr>';
-			tableData +=	'<tr class="table-row" data-href="http://tutorialsplane.com"><td>Kelly</td><td>kelly@gmail.com</td><td>USA</td></tr>';
-			tableData +=	'<tr class="table-row" data-href="http://tutorialsplane.com"><td>Kamana</td><td>kamna@gmail.com</td><td>India</td></tr>';
-			tableData +=	'<tr class="table-row" data-href="http://tutorialsplane.com"><td>Anay</td><td>anay@gmail.com</td><td>Canada</td></tr>';
-			tableData +=	'</table>';
-			
-			$( ".table-row" ).click(function() {
-  		alert( "Handler for .click() called." );
-		});
-		var h = document.getElementsByClassName("table-row");
-
-
-		$('#results').html(tableData);
-}
-
-function CreateTableFromJSON2(data){
 
 	
 	var tableData = '<table class = "table table-bordered table-condensed table-striped table-hover table-sm table-dark"><thead class="thead-dark"><tr><th rowspan="2">Id</th><th rowspan="2">Icon</th><th style="width: 150px">Due-Date</th><th>Status</th><th>Amount</th>';
