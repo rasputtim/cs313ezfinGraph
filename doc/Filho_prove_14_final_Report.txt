@@ -1,0 +1,96 @@
+After completing your final project, please answer the questions in this text file and submit it to I-Learn.
+
+1. Project title / one sentence description:
+
+EzFin Dashboard
+The purpose is to show graphs and figures with cashflow and spends by category from the financial 
+data stored in the project from the first semester (http://cryptic-beyond-10470.herokuapp.com/).
+
+2. The Heroku URL for your web application:
+
+https://serene-dawn-76163.herokuapp.com/
+
+3. The GitHub URL for your source code repository:
+
+https://github.com/rasputtim/cs313ezfinGraph.git
+
+4. Please provide a brief description of what your project does and how to use the application. Make sure to include any required information like a username and password.
+
+Description:
+
+1) The application from first semester purpose was to store data from finance transactions. That is all money people receive or spend. 
+   This allows one to control her/his budget.
+2) The purpose of this application is to serve as dashbord for the other, showing graphs from the data collected earlier. 
+   This gives the users a better view of their spending and better control of their finances. 
+
+What is available:
+
+3) The application provides two types of graphics:
+  The application provides two types of graphics:
+  a) Spend by category: Users choose the period and the system shows what were the spending for that period divided by expense category
+  b) Cashflow: Users choose the period and the system shows the cashflow graph of that period.
+
+
+4 ) instrucions:
+
+The username: admin
+password: 123456
+
+Note that the system uses the same users and passwords already registered in the system of the first semester.
+
+to use:
+	4.1 - login
+	4.2 - in the menu, go to the option Dashboard->cashflow or Dashboard-> ByCategory.
+	4.3- Select the period and categories in the left menu and click get graph.  (AJAX)
+              (if you do not select any category, the system will include all of them in the graph)
+	4.4 - The selected graph will be shown in the screen along with a table of the transactions used to create the chart.
+
+
+
+5. Briefly describe any pieces of the assignment that are not yet working correctly.
+
+everything working
+
+--------------------------------
+Project Self-assessment
+--------------------------------
+
+For each of the following requirements, please replace the "(YES/NO)" with either "YES" or "NO" as to whether or not your work met this requirement.
+
+Requirements
+------------
+(YES) 1. Your web application is running in Heroku.
+(YES) 2. Your latest source code is in GitHub.
+(YES) 3. Your web application is hosted on Node.js.
+(YES) 4. Your web application exposes one or more web services in Node.js.
+(YES) 5. Your web application consumes one or more of your web services from the browser.
+(YES) 6. Your web application has a data layer of either a database or third-party web service.
+
+For each of the following criteria, please replace the "(1-5)" with either the "1", "2", "3", "4", or "5" category you feel best describes your work.
+
+Categories
+----------
+1 - Some attempt was made
+2 - Developing, but significantly deficient
+3 - Slightly deficient, but still mostly adequate
+4 - Meets requirements
+5 - Shows creativity and excels above and beyond requirements
+
+Criteria
+----------
+(5) 1. Professional look and feel.
+(5) 2. Accomplishes a meaningful/interesting task.
+(5) 3. Demonstrates skill with HTML, CSS, and JavaScript.
+(5) 4. Demonstrates skill with Node.js.
+(5) 5. Demonstrates skill with Express.
+(5) 6. Demonstrates skill with web services.
+(5) 7. Demonstrates skill with client/server communication.
+(5) 8. Overall project evaluation.
+
+9. Finally, please provide an overall description/justification of the categories you selected.
+
+The look and feel is professional by using bootstrap and JQuery.
+Node.js programming is professional by separating routes, views, templates codes in separate files and folders. That makes code easy to understand and follow.
+Node.js uses several modules to acomplish different tasks, as bcrypt, express/ejs, plotly, async.parallel, body-parser, cookie-parser.
+AJAX communication auses async parallel in order to run several database queries simultaneously and wait for all queries to return the response to the requestor.
+The client side uses javascript to format JSON received data and present it to the user.
